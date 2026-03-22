@@ -345,7 +345,6 @@
   ></script>
 
   <script>
-    // ===== ZÁKLAD MAPY =====
     const imageWidth = 14000;
     const imageHeight = 14000;
 
@@ -383,7 +382,6 @@
       return { x, z };
     }
 
-    // ===== VÝBER SÚRADNÍC =====
     map.on('click', function(e) {
       const py = e.latlng.lat;
       const px = e.latlng.lng;
@@ -434,7 +432,6 @@
       map.fitBounds(bounds);
     });
 
-    // ===== IKONY =====
     const cityIcon = L.divIcon({
       className: '',
       html: `<div class="pixel-marker marker-city"></div>`,
@@ -451,7 +448,6 @@
       popupAnchor: [0, -20]
     });
 
-    // ===== VRSTVY =====
     const citiesLayer = L.layerGroup().addTo(map);
     const structuresLayer = L.layerGroup().addTo(map);
     const waterLayer = L.layerGroup().addTo(map);
@@ -459,7 +455,6 @@
     const regionsLayer = L.layerGroup().addTo(map);
     const landformsLayer = L.layerGroup().addTo(map);
 
-    // ===== REGISTRE PRE VIDITEĽNOSŤ =====
     const allVisibilityUpdaters = [];
 
     function registerUpdater(fn) {
@@ -475,7 +470,6 @@
       allVisibilityUpdaters.forEach(fn => fn());
     }
 
-    // ===== FUNKCIE =====
     function addCity(name, x, z, type, state, minZoom = -999) {
       const marker = L.marker(mcToPixel(x, z), { icon: cityIcon })
         .bindPopup(`
@@ -556,7 +550,7 @@
     function addState(name, points, borderColor, labelX = null, labelZ = null, labelMaxZoom = -1.5) {
       const polygon = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
         color: borderColor,
-        weight: 7.5,
+        weight: 8,
         fillOpacity: 0
       });
 
@@ -670,57 +664,54 @@
       { x: -53, z: 11 },
       { x: 40, z: -343 }
     ], "#9a9a9a", 700, -120, -1.5);
-addState("Valkýria", [
-  { x: 1128, z: 176 },
-  { x: 1522, z: 598 },
-  { x: 1252, z: 902 },
-  { x: 1729, z: 759 },
-  { x: 2401, z: 1105 },
-  { x: 2524, z: 1209 },
-  { x: 2961, z: 1401 },
-  { x: 3461, z: 1247 },
-  { x: 3888, z: 1606 },
-  { x: 4197, z: 1708 },
-  { x: 4205, z: 2124 },
-  { x: 3522, z: 2452 },
-  { x: 2976, z: 2980 },
-  { x: 2267, z: 3576 },
-  { x: 236, z: 3998 },
-  { x: -268, z: 4215 },
-  { x: -710, z: 4488 },
-  { x: -1065, z: 4725 },
-  { x: -1423, z: 5170 },
-  { x: -1584, z: 5513 },
-  { x: -1921, z: 5610 },
-  { x: -2210, z: 5768 },
-  { x: -2862, z: 5710 },
-  { x: -3296, z: 5588 },
-  { x: -3440, z: 5195 },
-  { x: -3180, z: 3504 },
-  { x: -2290, z: 3670 },
-  { x: -1732, z: 4056 },
-  { x: -1382, z: 3874 },
-  { x: -1152, z: 3926 },
-  { x: -894, z: 3820 },
-  { x: -888, z: 3680 },
-  { x: -674, z: 3648 },
-  { x: -306, z: 3032 },
-  { x: -150, z: 2786 },
-  { x: -950, z: 2330 },
-  { x: -1128, z: 1828 },
-  { x: -1008, z: 1450 },
-  { x: -236, z: 836 },
-  { x: 328, z: 822 },
-  { x: 686, z: 644 },
-  { x: 516, z: 346 }
-], "#c1121f", 1710, 2026, -1.5);
-    // Príklady pre ďalšie štáty:
-    // addState("Valkýria", [ ...body... ], "#c1121f", x, z, -1.5);
-    // addState("Grankolandia", [ ...body... ], "#e0c100", x, z, -1.5);
-    // addState("Norddeutschland", [ ...body... ], "#2a6fff", x, z, -1.5);
+
+    addState("Valkýria", [
+      { x: 1128, z: 176 },
+      { x: 1522, z: 598 },
+      { x: 1252, z: 902 },
+      { x: 1729, z: 759 },
+      { x: 2401, z: 1105 },
+      { x: 2524, z: 1209 },
+      { x: 2961, z: 1401 },
+      { x: 3461, z: 1247 },
+      { x: 3888, z: 1606 },
+      { x: 4197, z: 1708 },
+      { x: 4205, z: 2124 },
+      { x: 3522, z: 2452 },
+      { x: 2976, z: 2980 },
+      { x: 2267, z: 3576 },
+      { x: 236, z: 3998 },
+      { x: -268, z: 4215 },
+      { x: -710, z: 4488 },
+      { x: -1065, z: 4725 },
+      { x: -1423, z: 5170 },
+      { x: -1584, z: 5513 },
+      { x: -1921, z: 5610 },
+      { x: -2210, z: 5768 },
+      { x: -2862, z: 5710 },
+      { x: -3296, z: 5588 },
+      { x: -3440, z: 5195 },
+      { x: -3180, z: 3504 },
+      { x: -2290, z: 3670 },
+      { x: -1732, z: 4056 },
+      { x: -1382, z: 3874 },
+      { x: -1152, z: 3926 },
+      { x: -894, z: 3820 },
+      { x: -888, z: 3680 },
+      { x: -674, z: 3648 },
+      { x: -306, z: 3032 },
+      { x: -150, z: 2786 },
+      { x: -950, z: 2330 },
+      { x: -1128, z: 1828 },
+      { x: -1008, z: 1450 },
+      { x: -236, z: 836 },
+      { x: 328, z: 822 },
+      { x: 686, z: 644 },
+      { x: 516, z: 346 }
+    ], "#c1121f", 1710, 2026, -1.5);
 
     // ===== REGIÓNY VALKÝRIE =====
-     addRegion("Fragment", "Valkýria", [
+    addRegion("Fragment", "Valkýria", [
       { x: -1072, z: 4210 },
       { x: -884, z: 4236 },
       { x: -719, z: 4479 },
@@ -733,237 +724,254 @@ addState("Valkýria", [
       fillOpacity: 0,
       labelWidth: 220
     });
-addRegion("Panjam", "Valkýria", [
-  { x: -1072, z: 4717 },
-  { x: -1147, z: 4603 },
-  { x: -1292, z: 4561 },
-  { x: -1740, z: 4059 },
-  { x: -1381, z: 3882 },
-  { x: -1159, z: 3924 },
-  { x: -895, z: 3832 },
-  { x: -888, z: 3684 },
-  { x: -667, z: 3655 },
-  { x: -271, z: 4207 }
-], -810, 4066, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2,
-  fillColor: "#ff6b6b",
-  fillOpacity: 0,
-  labelWidth: 220
-});
-addRegion("Nóra", "Valkýria", [
-  { x: -263, z: 4203 },
-  { x: 237, z: 3988 },
-  { x: 53, z: 3876 },
-  { x: -46, z: 3769 },
-  { x: -123, z: 3606 },
-  { x: -145, z: 3447 },
-  { x: -256, z: 3346 },
-  { x: -243, z: 3060 },
-  { x: -309, z: 3033 },
-  { x: -461, z: 3330 },
-  { x: -674, z: 3645 }
-], -200, 3600, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2
-});
-addRegion("Skyland", "Valkýria", [
-  { x: -1738, z: 4068 },
-  { x: -2291, z: 3668 },
-  { x: -3196, z: 3515 },
-  { x: -3440, z: 5197 },
-  { x: -3293, z: 5579 },
-  { x: -2862, z: 5698 },
-  { x: -2213, z: 5756 },
-  { x: -1922, z: 5598 },
-  { x: -1585, z: 5502 },
-  { x: -1425, z: 5174 },
-  { x: -1218, z: 4957 },
-  { x: -1070, z: 4721 },
-  { x: -1147, z: 4602 },
-  { x: -1293, z: 4559 }
-], -2300, 5000, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2
-});
-addRegion("Sudland", "Valkýria", [
-  { x: 2238, z: 3549 },
-  { x: 1326, z: 2573 },
-  { x: 372, z: 3421 },
-  { x: 839, z: 3659 },
-  { x: 1342, z: 3785 },
-  { x: 2267, z: 3581 }
-], 1400, 3300, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2
-});
-addRegion("Wachlaf", "Valkýria", [
-  { x: 1324, z: 2571 },
-  { x: 2147, z: 2073 },
-  { x: 2537, z: 2607 },
-  { x: 2973, z: 2975 },
-  { x: 2267, z: 3579 }
-], 2200, 3000, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2
-});
-addRegion("Concordia", "Valkýria", [
-  { x: 2145, z: 2071 },
-  { x: 2164, z: 1961 },
-  { x: 2436, z: 1797 },
-  { x: 2554, z: 1741 },
-  { x: 2748, z: 1643 },
-  { x: 2954, z: 1603 },
-  { x: 3152, z: 1577 },
-  { x: 3577, z: 1591 },
-  { x: 3382, z: 2098 },
-  { x: 3520, z: 2467 },
-  { x: 2977, z: 2975 },
-  { x: 2530, z: 2601 }
-], 2900, 2100, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2
-});
-addRegion("Dauland", "Valkýria", [
-  { x: 3889, z: 1606 },
-  { x: 4195, z: 1707 },
-  { x: 4201, z: 2121 },
-  { x: 3521, z: 2470 },
-  { x: 3383, z: 2094 },
-  { x: 3578, z: 1589 }
-], 3800, 2000, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2
-});
-addRegion("Italy", "Valkýria", [
-  { x: 2224, z: 1329 },
-  { x: 2402, z: 1102 },
-  { x: 2527, z: 1213 },
-  { x: 2963, z: 1403 },
-  { x: 3463, z: 1245 },
-  { x: 3889, z: 1606 },
-  { x: 3153, z: 1576 },
-  { x: 2749, z: 1644 },
-  { x: 2165, z: 1959 }
-], 3000, 1500, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2
-});
-addRegion("Intora", "Valkýria", [
-  { x: 841, z: 3667 },
-  { x: 1337, z: 3798 },
-  { x: 238, z: 3990 },
-  { x: -47, z: 3766 },
-  { x: -121, z: 3621 },
-  { x: -140, z: 3455 },
-  { x: -258, z: 3347 },
-  { x: -248, z: 3061 },
-  { x: -308, z: 3033 },
-  { x: -140, z: 2782 },
-  { x: 121, z: 2474 },
-  { x: 514, z: 2153 },
-  { x: 1194, z: 1803 },
-  { x: 1824, z: 1934 },
-  { x: 1316, z: 2570 },
-  { x: 371, z: 3419 }
-], 600, 3000, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2
-});
-addRegion("Himalayas", "Valkýria", [
-  { x: 512, z: 2158 },
-  { x: 224, z: 1728 },
-  { x: 544, z: 1548 },
-  { x: 270, z: 1398 },
-  { x: -108, z: 1530 },
-  { x: -454, z: 1526 },
-  { x: -678, z: 1750 },
-  { x: -1134, z: 1814 },
-  { x: -954, z: 2316 },
-  { x: -152, z: 2790 },
-  { x: 122, z: 2471 }
-], -300, 2000, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2
-});
-addRegion("Centrálne planiny", "Valkýria", [
-  { x: 693, z: 664 },
-  { x: 744, z: 1256 },
-  { x: 1253, z: 893 },
-  { x: 1522, z: 599 },
-  { x: 1129, z: 178 },
-  { x: 518, z: 345 }
-], 1000, 500, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2
-});
-addRegion("Norfolk", "Valkýria", [
-  { x: 417, z: 1090 },
-  { x: 326, z: 826 },
-  { x: 686, z: 658 },
-  { x: 737, z: 1263 }
-], 600, 950, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2
-});
-addRegion("Pases", "Valkýria", [
-  { x: -681, z: 1750 },
-  { x: -452, z: 1525 },
-  { x: -105, z: 1528 },
-  { x: 274, z: 1398 },
-  { x: 543, z: 1547 },
-  { x: 732, z: 1262 },
-  { x: 414, z: 1087 },
-  { x: 326, z: 828 },
-  { x: 127, z: 824 },
-  { x: -238, z: 835 },
-  { x: -1008, z: 1440 },
-  { x: -1134, z: 1815 }
-], -200, 1300, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2
-});
-addRegion("Laeria", "Valkýria", [
-  { x: 546, z: 1552 },
-  { x: 738, z: 1259 },
-  { x: 1251, z: 903 },
-  { x: 1724, z: 753 },
-  { x: 1556, z: 957 },
-  { x: 1633, z: 1302 },
-  { x: 1193, z: 1802 },
-  { x: 509, z: 2154 },
-  { x: 225, z: 1729 }
-], 900, 1400, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2
-});
-addRegion("Havaj", "Valkýria", [
-  { x: 1560, z: 962 },
-  { x: 1639, z: 1314 },
-  { x: 1199, z: 1797 },
-  { x: 1824, z: 1943 },
-  { x: 1332, z: 2560 },
-  { x: 2146, z: 2067 },
-  { x: 2230, z: 1322 },
-  { x: 2405, z: 1105 },
-  { x: 1730, z: 761 }
-], 1800, 1500, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2
-});
-addRegion("Bulwark", "Valkýria", [
-  { x: 2762, z: -789 },
-  { x: 3006, z: -1151 },
-  { x: 3456, z: -939 },
-  { x: 3528, z: -519 },
-  { x: 3350, z: -414 },
-  { x: 3127, z: -430 },
-  { x: 2922, z: -521 },
-  { x: 2687, z: -642 }
-], 3100, -700, -1.5, -0.5, {
-  color: "#ff6b6b",
-  weight: 2
-});
+
+    addRegion("Panjam", "Valkýria", [
+      { x: -1072, z: 4717 },
+      { x: -1147, z: 4603 },
+      { x: -1292, z: 4561 },
+      { x: -1740, z: 4059 },
+      { x: -1381, z: 3882 },
+      { x: -1159, z: 3924 },
+      { x: -895, z: 3832 },
+      { x: -888, z: 3684 },
+      { x: -667, z: 3655 },
+      { x: -271, z: 4207 }
+    ], -810, 4066, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2,
+      fillColor: "#ff6b6b",
+      fillOpacity: 0,
+      labelWidth: 220
+    });
+
+    addRegion("Nóra", "Valkýria", [
+      { x: -263, z: 4203 },
+      { x: 237, z: 3988 },
+      { x: 53, z: 3876 },
+      { x: -46, z: 3769 },
+      { x: -123, z: 3606 },
+      { x: -145, z: 3447 },
+      { x: -256, z: 3346 },
+      { x: -243, z: 3060 },
+      { x: -309, z: 3033 },
+      { x: -461, z: 3330 },
+      { x: -674, z: 3645 }
+    ], -200, 3600, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2
+    });
+
+    addRegion("Skyland", "Valkýria", [
+      { x: -1738, z: 4068 },
+      { x: -2291, z: 3668 },
+      { x: -3196, z: 3515 },
+      { x: -3440, z: 5197 },
+      { x: -3293, z: 5579 },
+      { x: -2862, z: 5698 },
+      { x: -2213, z: 5756 },
+      { x: -1922, z: 5598 },
+      { x: -1585, z: 5502 },
+      { x: -1425, z: 5174 },
+      { x: -1218, z: 4957 },
+      { x: -1070, z: 4721 },
+      { x: -1147, z: 4602 },
+      { x: -1293, z: 4559 }
+    ], -2300, 5000, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2
+    });
+
+    addRegion("Sudland", "Valkýria", [
+      { x: 2238, z: 3549 },
+      { x: 1326, z: 2573 },
+      { x: 372, z: 3421 },
+      { x: 839, z: 3659 },
+      { x: 1342, z: 3785 },
+      { x: 2267, z: 3581 }
+    ], 1400, 3300, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2
+    });
+
+    addRegion("Wachlaf", "Valkýria", [
+      { x: 1324, z: 2571 },
+      { x: 2147, z: 2073 },
+      { x: 2537, z: 2607 },
+      { x: 2973, z: 2975 },
+      { x: 2267, z: 3579 }
+    ], 2200, 3000, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2
+    });
+
+    addRegion("Concordia", "Valkýria", [
+      { x: 2145, z: 2071 },
+      { x: 2164, z: 1961 },
+      { x: 2436, z: 1797 },
+      { x: 2554, z: 1741 },
+      { x: 2748, z: 1643 },
+      { x: 2954, z: 1603 },
+      { x: 3152, z: 1577 },
+      { x: 3577, z: 1591 },
+      { x: 3382, z: 2098 },
+      { x: 3520, z: 2467 },
+      { x: 2977, z: 2975 },
+      { x: 2530, z: 2601 }
+    ], 2900, 2100, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2
+    });
+
+    addRegion("Dauland", "Valkýria", [
+      { x: 3889, z: 1606 },
+      { x: 4195, z: 1707 },
+      { x: 4201, z: 2121 },
+      { x: 3521, z: 2470 },
+      { x: 3383, z: 2094 },
+      { x: 3578, z: 1589 }
+    ], 3800, 2000, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2
+    });
+
+    addRegion("Italy", "Valkýria", [
+      { x: 2224, z: 1329 },
+      { x: 2402, z: 1102 },
+      { x: 2527, z: 1213 },
+      { x: 2963, z: 1403 },
+      { x: 3463, z: 1245 },
+      { x: 3889, z: 1606 },
+      { x: 3153, z: 1576 },
+      { x: 2749, z: 1644 },
+      { x: 2165, z: 1959 }
+    ], 3000, 1500, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2
+    });
+
+    addRegion("Intora", "Valkýria", [
+      { x: 841, z: 3667 },
+      { x: 1337, z: 3798 },
+      { x: 238, z: 3990 },
+      { x: -47, z: 3766 },
+      { x: -121, z: 3621 },
+      { x: -140, z: 3455 },
+      { x: -258, z: 3347 },
+      { x: -248, z: 3061 },
+      { x: -308, z: 3033 },
+      { x: -140, z: 2782 },
+      { x: 121, z: 2474 },
+      { x: 514, z: 2153 },
+      { x: 1194, z: 1803 },
+      { x: 1824, z: 1934 },
+      { x: 1316, z: 2570 },
+      { x: 371, z: 3419 }
+    ], 600, 3000, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2
+    });
+
+    addRegion("Himalayas", "Valkýria", [
+      { x: 512, z: 2158 },
+      { x: 224, z: 1728 },
+      { x: 544, z: 1548 },
+      { x: 270, z: 1398 },
+      { x: -108, z: 1530 },
+      { x: -454, z: 1526 },
+      { x: -678, z: 1750 },
+      { x: -1134, z: 1814 },
+      { x: -954, z: 2316 },
+      { x: -152, z: 2790 },
+      { x: 122, z: 2471 }
+    ], -300, 2000, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2
+    });
+
+    addRegion("Centrálne planiny", "Valkýria", [
+      { x: 693, z: 664 },
+      { x: 744, z: 1256 },
+      { x: 1253, z: 893 },
+      { x: 1522, z: 599 },
+      { x: 1129, z: 178 },
+      { x: 518, z: 345 }
+    ], 1000, 500, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2
+    });
+
+    addRegion("Norfolk", "Valkýria", [
+      { x: 417, z: 1090 },
+      { x: 326, z: 826 },
+      { x: 686, z: 658 },
+      { x: 737, z: 1263 }
+    ], 600, 950, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2
+    });
+
+    addRegion("Pases", "Valkýria", [
+      { x: -681, z: 1750 },
+      { x: -452, z: 1525 },
+      { x: -105, z: 1528 },
+      { x: 274, z: 1398 },
+      { x: 543, z: 1547 },
+      { x: 732, z: 1262 },
+      { x: 414, z: 1087 },
+      { x: 326, z: 828 },
+      { x: 127, z: 824 },
+      { x: -238, z: 835 },
+      { x: -1008, z: 1440 },
+      { x: -1134, z: 1815 }
+    ], -200, 1300, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2
+    });
+
+    addRegion("Laeria", "Valkýria", [
+      { x: 546, z: 1552 },
+      { x: 738, z: 1259 },
+      { x: 1251, z: 903 },
+      { x: 1724, z: 753 },
+      { x: 1556, z: 957 },
+      { x: 1633, z: 1302 },
+      { x: 1193, z: 1802 },
+      { x: 509, z: 2154 },
+      { x: 225, z: 1729 }
+    ], 900, 1400, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2
+    });
+
+    addRegion("Havaj", "Valkýria", [
+      { x: 1560, z: 962 },
+      { x: 1639, z: 1314 },
+      { x: 1199, z: 1797 },
+      { x: 1824, z: 1943 },
+      { x: 1332, z: 2560 },
+      { x: 2146, z: 2067 },
+      { x: 2230, z: 1322 },
+      { x: 2405, z: 1105 },
+      { x: 1730, z: 761 }
+    ], 1800, 1500, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2
+    });
+
+    addRegion("Bulwark", "Valkýria", [
+      { x: 2762, z: -789 },
+      { x: 3006, z: -1151 },
+      { x: 3456, z: -939 },
+      { x: 3528, z: -519 },
+      { x: 3350, z: -414 },
+      { x: 3127, z: -430 },
+      { x: 2922, z: -521 },
+      { x: 2687, z: -642 }
+    ], 3100, -700, -1.5, -0.5, {
+      color: "#ff6b6b",
+      weight: 2
+    });
+
     // ===== REGIÓNY NEUTRÁLNEJ OBLASTI =====
     addRegion("Železné vrchy", "Neutrálna oblasť", [
       { x: 364, z: -528 },
@@ -980,7 +988,8 @@ addRegion("Bulwark", "Valkýria", [
       fillOpacity: 0.10,
       labelWidth: 220
     });
-addRegion("Mesto", "Neutrálna oblasť", [
+
+    addRegion("Mesto", "Neutrálna oblasť", [
       { x: 435, z: -196 },
       { x: 364, z: -528 },
       { x: 48, z: -355 },
@@ -1026,12 +1035,13 @@ addRegion("Mesto", "Neutrálna oblasť", [
     addCity("Nóra", -375, 3770, "Hlavné mesto", "Valkýria");
     addCity("Dračí vrch", 865, -344, "Chata", "Neutrálna oblasť", -1);
     addCity("Uhlinovce", 839, 725, "Dedina", "Valkýria", -1.5);
-    addCity("Velká Pláň", 1180, 786, "Dedina", "Valkýria", -1.5);
+    addCity("Veľká Pláň", 1180, 786, "Dedina", "Valkýria", -1.5);
     addCity("Cherry", 365, 1280, "Dedina", "Valkýria", -1.5);
     addCity("middlelands", 3004, -1475, "Dedina", "Grankolandia", -1.5);
     addCity("York", 3268, 2356, "Dedina", "Valkýria", -1.5);
     addCity("Budeto", 905, 2816, "Dedina", "Valkýria", -1.5);
     addCity("Welle", 2442, -1948, "Dedina", "Grankolandia", -1.5);
+
     // ===== ŠTRUKTÚRY =====
     addStructure("Springfield", 2312, -217, "Pillager tower", "Grankolandia", -1.5);
     addStructure("The Pillager Tower", 569, 311, "Pillager tower", "Neutrálna oblasť", -1.5);
@@ -1041,11 +1051,6 @@ addRegion("Mesto", "Neutrálna oblasť", [
     addWater("Dunaj", "river", 400, 840, "river-label", 90, 20, -1.25);
     addWater("North Red Sea", "sea", 2003, 1120, "sea-label", 300, 40, -2);
     addWater("Oko Hôr", "lake", 307, 4305, "lake-label", 140, 28, -1.25);
-
-    // Príklady ďalších vôd:
-    // addWater("Veľký vodopád", "waterfall", 500, 700, "waterfall-label", 170, 24, -1);
-    // addWater("Južný prieplav", "canal", 1000, 900, "canal-label", 180, 24, -1.5);
-    // addWater("Severný prieliv", "strait", 1300, 400, "strait-label", 180, 24, -2);
 
     // ===== PRÍRODNÉ OBLASTI =====
     addLandmarkArea("Veľké lúky", "lúky", 1200, 500, -2, -0.5);
@@ -1057,6 +1062,7 @@ addRegion("Mesto", "Neutrálna oblasť", [
     document.getElementById("toggleStates").addEventListener("change", refreshVisibility);
     document.getElementById("toggleRegions").addEventListener("change", refreshVisibility);
     document.getElementById("toggleLandforms").addEventListener("change", refreshVisibility);
+
     map.on("zoomend", refreshVisibility);
 
     refreshVisibility();
