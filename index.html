@@ -651,18 +651,11 @@
     }
 
     // ===== ŠTÁTY =====
-    addState("Neutrálna oblasť", [
-      { x: 48, z: -354 },
-      { x: 364, z: -528 },
-      { x: 651, z: -632 },
-      { x: 966, z: -630 },
-      { x: 1409, z: -392 },
-      { x: 1387, z: -114 },
-      { x: 1132, z: 163 },
-      { x: 523, z: 359 },
-      { x: 110, z: 283 },
-      { x: -53, z: 11 },
-      { x: 40, z: -343 }
+    addState("Spawn", [
+      { x: 52, z: -353 },
+      { x: -51, z: 14 },
+      { x: 107, z: 293 },
+      { x: 153, z: -111 }
     ], "#9a9a9a", 700, -120, -1.5);
 
     addState("Valkýria", [
@@ -970,63 +963,6 @@
     ], 3100, -700, -1.5, -0.5, {
       color: "#ff6b6b",
       weight: 2
-    });
-
-    // ===== REGIÓNY NEUTRÁLNEJ OBLASTI =====
-    addRegion("Železné vrchy", "Neutrálna oblasť", [
-      { x: 364, z: -528 },
-      { x: 652, z: -631 },
-      { x: 965, z: -630 },
-      { x: 1408, z: -392 },
-      { x: 1389, z: -113 },
-      { x: 1133, z: 165 },
-      { x: 434, z: -197 }
-    ], 800, -250, -1.5, -0.5, {
-      color: "#8f8f8f",
-      weight: 2,
-      fillColor: "#b5b5b5",
-      fillOpacity: 0.10,
-      labelWidth: 220
-    });
-
-    addRegion("Mesto", "Neutrálna oblasť", [
-      { x: 435, z: -196 },
-      { x: 364, z: -528 },
-      { x: 48, z: -355 },
-      { x: 155, z: -107 }
-    ], 286, -269, -1.5, -0.5, {
-      color: "#8f8f8f",
-      weight: 2,
-      fillColor: "#b5b5b5",
-      fillOpacity: 0.10,
-      labelWidth: 140
-    });
-
-    addRegion("Spawn", "Neutrálna oblasť", [
-      { x: 52, z: -353 },
-      { x: -51, z: 14 },
-      { x: 107, z: 293 },
-      { x: 153, z: -111 }
-    ], 94, 0, -1.5, -0.5, {
-      color: "#8f8f8f",
-      weight: 2,
-      fillColor: "#b5b5b5",
-      fillOpacity: 0.10,
-      labelWidth: 140
-    });
-
-    addRegion("Savana", "Neutrálna oblasť", [
-      { x: 154, z: -112 },
-      { x: 433, z: -200 },
-      { x: 1132, z: 167 },
-      { x: 521, z: 357 },
-      { x: 107, z: 280 }
-    ], 550, 120, -1.5, -0.5, {
-      color: "#8f8f8f",
-      weight: 2,
-      fillColor: "#b5b5b5",
-      fillOpacity: 0.10,
-      labelWidth: 160
     });
 
     // ===== MESTÁ =====
