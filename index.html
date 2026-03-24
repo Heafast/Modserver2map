@@ -36,7 +36,7 @@
       background: rgba(20, 20, 20, 0.92);
       padding: 12px;
       border-radius: 12px;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
       width: 300px;
       max-height: calc(100vh - 24px);
       overflow: auto;
@@ -54,7 +54,7 @@
       opacity: 0.9;
     }
 
-    .panel input {
+    .panel input[type="number"] {
       width: 100%;
       box-sizing: border-box;
       margin-top: 4px;
@@ -65,6 +65,13 @@
       background: #1d1d1d;
       color: white;
       font-size: 14px;
+    }
+
+    .panel input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+      padding: 0;
+      accent-color: #2d6cdf;
     }
 
     .panel button {
@@ -122,8 +129,8 @@
       box-sizing: border-box;
       border: 2px solid #111;
       box-shadow:
-        inset -2px -2px 0 rgba(0,0,0,0.35),
-        inset 2px 2px 0 rgba(255,255,255,0.12);
+        inset -2px -2px 0 rgba(0, 0, 0, 0.35),
+        inset 2px 2px 0 rgba(255, 255, 255, 0.12);
     }
 
     .pixel-marker::after {
@@ -156,10 +163,10 @@
       letter-spacing: 2px;
       text-transform: uppercase;
       text-shadow:
-        3px 3px 0 rgba(0,0,0,0.7),
-        -1px -1px 0 rgba(0,0,0,0.7),
-        1px -1px 0 rgba(0,0,0,0.7),
-        -1px 1px 0 rgba(0,0,0,0.7);
+        3px 3px 0 rgba(0, 0, 0, 0.7),
+        -1px -1px 0 rgba(0, 0, 0, 0.7),
+        1px -1px 0 rgba(0, 0, 0, 0.7),
+        -1px 1px 0 rgba(0, 0, 0, 0.7);
       white-space: nowrap;
       pointer-events: none;
       image-rendering: pixelated;
@@ -171,10 +178,10 @@
       font-weight: bold;
       letter-spacing: 1px;
       text-shadow:
-        2px 2px 0 rgba(0,0,0,0.7),
-        -1px -1px 0 rgba(0,0,0,0.7),
-        1px -1px 0 rgba(0,0,0,0.7),
-        -1px 1px 0 rgba(0,0,0,0.7);
+        2px 2px 0 rgba(0, 0, 0, 0.7),
+        -1px -1px 0 rgba(0, 0, 0, 0.7),
+        1px -1px 0 rgba(0, 0, 0, 0.7),
+        -1px 1px 0 rgba(0, 0, 0, 0.7);
       white-space: nowrap;
       pointer-events: none;
     }
@@ -185,10 +192,10 @@
       font-weight: bold;
       font-style: italic;
       text-shadow:
-        2px 2px 0 rgba(0,0,0,0.65),
-        -1px -1px 0 rgba(0,0,0,0.65),
-        1px -1px 0 rgba(0,0,0,0.65),
-        -1px 1px 0 rgba(0,0,0,0.65);
+        2px 2px 0 rgba(0, 0, 0, 0.65),
+        -1px -1px 0 rgba(0, 0, 0, 0.65),
+        1px -1px 0 rgba(0, 0, 0, 0.65),
+        -1px 1px 0 rgba(0, 0, 0, 0.65);
       white-space: nowrap;
       pointer-events: none;
       image-rendering: pixelated;
@@ -199,10 +206,10 @@
       font-size: 20px;
       font-weight: bold;
       text-shadow:
-        2px 2px 0 rgba(0,0,0,0.65),
-        -1px -1px 0 rgba(0,0,0,0.65),
-        1px -1px 0 rgba(0,0,0,0.65),
-        -1px 1px 0 rgba(0,0,0,0.65);
+        2px 2px 0 rgba(0, 0, 0, 0.65),
+        -1px -1px 0 rgba(0, 0, 0, 0.65),
+        1px -1px 0 rgba(0, 0, 0, 0.65),
+        -1px 1px 0 rgba(0, 0, 0, 0.65);
       white-space: nowrap;
       pointer-events: none;
       image-rendering: pixelated;
@@ -214,10 +221,10 @@
       font-weight: bold;
       letter-spacing: 2px;
       text-shadow:
-        3px 3px 0 rgba(0,0,0,0.7),
-        -1px -1px 0 rgba(0,0,0,0.7),
-        1px -1px 0 rgba(0,0,0,0.7),
-        -1px 1px 0 rgba(0,0,0,0.7);
+        3px 3px 0 rgba(0, 0, 0, 0.7),
+        -1px -1px 0 rgba(0, 0, 0, 0.7),
+        1px -1px 0 rgba(0, 0, 0, 0.7),
+        -1px 1px 0 rgba(0, 0, 0, 0.7);
       white-space: nowrap;
       pointer-events: none;
       image-rendering: pixelated;
@@ -228,10 +235,10 @@
       font-size: 18px;
       font-weight: bold;
       text-shadow:
-        2px 2px 0 rgba(0,0,0,0.65),
-        -1px -1px 0 rgba(0,0,0,0.65),
-        1px -1px 0 rgba(0,0,0,0.65),
-        -1px 1px 0 rgba(0,0,0,0.65);
+        2px 2px 0 rgba(0, 0, 0, 0.65),
+        -1px -1px 0 rgba(0, 0, 0, 0.65),
+        1px -1px 0 rgba(0, 0, 0, 0.65),
+        -1px 1px 0 rgba(0, 0, 0, 0.65);
       white-space: nowrap;
       pointer-events: none;
       image-rendering: pixelated;
@@ -242,10 +249,10 @@
       font-size: 18px;
       font-weight: bold;
       text-shadow:
-        2px 2px 0 rgba(0,0,0,0.65),
-        -1px -1px 0 rgba(0,0,0,0.65),
-        1px -1px 0 rgba(0,0,0,0.65),
-        -1px 1px 0 rgba(0,0,0,0.65);
+        2px 2px 0 rgba(0, 0, 0, 0.65),
+        -1px -1px 0 rgba(0, 0, 0, 0.65),
+        1px -1px 0 rgba(0, 0, 0, 0.65),
+        -1px 1px 0 rgba(0, 0, 0, 0.65);
       white-space: nowrap;
       pointer-events: none;
       image-rendering: pixelated;
@@ -256,10 +263,10 @@
       font-size: 17px;
       font-weight: bold;
       text-shadow:
-        2px 2px 0 rgba(0,0,0,0.65),
-        -1px -1px 0 rgba(0,0,0,0.65),
-        1px -1px 0 rgba(0,0,0,0.65),
-        -1px 1px 0 rgba(0,0,0,0.65);
+        2px 2px 0 rgba(0, 0, 0, 0.65),
+        -1px -1px 0 rgba(0, 0, 0, 0.65),
+        1px -1px 0 rgba(0, 0, 0, 0.65),
+        -1px 1px 0 rgba(0, 0, 0, 0.65);
       white-space: nowrap;
       pointer-events: none;
       image-rendering: pixelated;
@@ -270,10 +277,10 @@
       font-size: 20px;
       font-weight: bold;
       text-shadow:
-        2px 2px 0 rgba(0,0,0,0.7),
-        -1px -1px 0 rgba(0,0,0,0.7),
-        1px -1px 0 rgba(0,0,0,0.7),
-        -1px 1px 0 rgba(0,0,0,0.7);
+        2px 2px 0 rgba(0, 0, 0, 0.7),
+        -1px -1px 0 rgba(0, 0, 0, 0.7),
+        1px -1px 0 rgba(0, 0, 0, 0.7),
+        -1px 1px 0 rgba(0, 0, 0, 0.7);
       white-space: nowrap;
       pointer-events: none;
       image-rendering: pixelated;
@@ -355,7 +362,7 @@
 
     const bounds = [[0, 0], [imageHeight, imageWidth]];
 
-    const map = L.map('map', {
+    const map = L.map("map", {
       crs: L.CRS.Simple,
       minZoom: -4,
       maxZoom: 2,
@@ -365,7 +372,7 @@
       maxBoundsViscosity: 1.0
     });
 
-    L.imageOverlay('mapa.jpg', bounds).addTo(map);
+    L.imageOverlay("mapa.jpg", bounds).addTo(map);
     map.fitBounds(bounds);
 
     let searchMarker = null;
@@ -382,12 +389,12 @@
       return { x, z };
     }
 
-    map.on('click', function(e) {
+    map.on("click", function (e) {
       const py = e.latlng.lat;
       const px = e.latlng.lng;
       const mc = pixelToMc(py, px);
 
-      document.getElementById('clickedCoords').innerHTML =
+      document.getElementById("clickedCoords").innerHTML =
         `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
 
       if (searchMarker) {
@@ -399,17 +406,17 @@
         .openPopup();
     });
 
-    document.getElementById('goToCoords').addEventListener('click', function() {
-      const x = parseInt(document.getElementById('coordX').value, 10);
-      const z = parseInt(document.getElementById('coordZ').value, 10);
+    document.getElementById("goToCoords").addEventListener("click", function () {
+      const x = parseInt(document.getElementById("coordX").value, 10);
+      const z = parseInt(document.getElementById("coordZ").value, 10);
 
       if (isNaN(x) || isNaN(z)) {
-        alert('Zadaj platné X a Z súradnice.');
+        alert("Zadaj platné X a Z súradnice.");
         return;
       }
 
       if (x < mcMinX || x > mcMaxX || z < mcMinZ || z > mcMaxZ) {
-        alert('Tieto súradnice sú mimo mapy (-7000 až +7000).');
+        alert("Tieto súradnice sú mimo mapy (-7000 až +7000).");
         return;
       }
 
@@ -424,16 +431,16 @@
         .bindPopup(`X: ${x}<br>Z: ${z}`)
         .openPopup();
 
-      document.getElementById('clickedCoords').innerHTML =
+      document.getElementById("clickedCoords").innerHTML =
         `<strong>Nájdené súradnice:</strong><br>X: ${x}<br>Z: ${z}`;
     });
 
-    document.getElementById('resetView').addEventListener('click', function() {
+    document.getElementById("resetView").addEventListener("click", function () {
       map.fitBounds(bounds);
     });
 
     const cityIcon = L.divIcon({
-      className: '',
+      className: "",
       html: `<div class="pixel-marker marker-city"></div>`,
       iconSize: [18, 24],
       iconAnchor: [9, 24],
@@ -441,7 +448,7 @@
     });
 
     const structureIcon = L.divIcon({
-      className: '',
+      className: "",
       html: `<div class="pixel-marker marker-structure"></div>`,
       iconSize: [18, 24],
       iconAnchor: [9, 24],
@@ -513,7 +520,7 @@
     function addTextLabel(layer, toggleId, x, z, html, iconWidth, iconHeight, minZoom = -999, maxZoom = 999) {
       const label = L.marker(mcToPixel(x, z), {
         icon: L.divIcon({
-          className: '',
+          className: "",
           html,
           iconSize: [iconWidth, iconHeight],
           iconAnchor: [iconWidth / 2, iconHeight / 2]
@@ -554,7 +561,7 @@
         fillOpacity: 0
       });
 
-      polygon.on("click", function(e) {
+      polygon.on("click", function (e) {
         const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
         L.popup()
           .setLatLng(e.latlng)
@@ -600,7 +607,7 @@
         fillOpacity: options.fillOpacity ?? 0
       });
 
-      polygon.on("click", function(e) {
+      polygon.on("click", function (e) {
         const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
         L.popup()
           .setLatLng(e.latlng)
@@ -951,29 +958,27 @@
       weight: 2
     });
 
-
-
-// ===== MESTÁ =====
- addCity("Norfolk", 600, 850, "Továrenské mesto", "Valkýria");
- addCity("Spawn mesto", 250, -275, "Spawn", "Staliningrad & Berlin");
- addCity("Nóra", -375, 3770, "Hlavné mesto", "Valkýria");
- addCity("Dračí vrch", 865, -344, "Chata", "Staliningrad & Berlin", -1);
- addCity("Uhlinovce", 839, 725, "Dedina", "Valkýria", -1.5);
- addCity("Veľká Pláň", 1180, 786, "Dedina", "Valkýria", -1.5);
- addCity("Cherry", 365, 1280, "Dedina", "Valkýria", -1.5);
- addCity("middlelands", 3004, -1475, "Dedina", "Grankolandia", -1.5); 
- addCity("York", 3268, 2356, "Dedina", "Valkýria", -1.5);
- addCity("Budeto", 905, 2816, "Dedina", "Valkýria", -1.5);
- addCity("Welle", 2442, -1948, "Dedina", "Grankolandia", -1.5);
- addCity("Amsterdam", 1340, 3269, "prístav", "Valkýria", -1.5);
- addCity("Rotterdam", 1261, 3025, "prístav", "Valkýria", -1.5);
- addCity("Ardeny", 255, 2319, "Dedina", "Valkýria", -1.5);
- addCity("Sĺňava", 2479, 1708, "prístav", "Valkýria", -1.5);
- addCity("Panama", 2754, 1719, "dedina", "Valkýria", -1.5);
- addCity("Florida", 3651, 1721, "prístav", "Valkýria", -1.5);
- addCity("Tokyo", -1253, 3358, "dedina", "Norddeutschland", -1.5);
- addCity("Breeze", 3910, -625, "prístav", "Grankolandia", -1.5);
- addCity("Drahovce", -477, 1845, "Mesto", "Ľudová demokratická republika pracovníkov", -1.5);
+    // ===== MESTÁ =====
+    addCity("Norfolk", 600, 850, "Továrenské mesto", "Valkýria");
+    addCity("Spawn mesto", 250, -275, "Spawn", "Staliningrad & Berlin");
+    addCity("Nóra", -375, 3770, "Hlavné mesto", "Valkýria");
+    addCity("Dračí vrch", 865, -344, "Chata", "Staliningrad & Berlin", -1);
+    addCity("Uhlinovce", 839, 725, "Dedina", "Valkýria", -1.5);
+    addCity("Veľká Pláň", 1180, 786, "Dedina", "Valkýria", -1.5);
+    addCity("Cherry", 365, 1280, "Dedina", "Valkýria", -1.5);
+    addCity("middlelands", 3004, -1475, "Dedina", "Grankolandia", -1.5);
+    addCity("York", 3268, 2356, "Dedina", "Valkýria", -1.5);
+    addCity("Budeto", 905, 2816, "Dedina", "Valkýria", -1.5);
+    addCity("Welle", 2442, -1948, "Dedina", "Grankolandia", -1.5);
+    addCity("Amsterdam", 1340, 3269, "Prístav", "Valkýria", -1.5);
+    addCity("Rotterdam", 1261, 3025, "Prístav", "Valkýria", -1.5);
+    addCity("Ardeny", 255, 2319, "Dedina", "Valkýria", -1.5);
+    addCity("Sĺňava", 2479, 1708, "Prístav", "Valkýria", -1.5);
+    addCity("Panama", 2754, 1719, "Dedina", "Valkýria", -1.5);
+    addCity("Florida", 3651, 1721, "Prístav", "Valkýria", -1.5);
+    addCity("Tokyo", -1253, 3358, "Dedina", "Norddeutschland", -1.5);
+    addCity("Breeze", 3910, -625, "Prístav", "Grankolandia", -1.5);
+    addCity("Drahovce", -477, 1845, "Mesto", "Ľudová demokratická republika pracovníkov", -1.5);
 
     // ===== ŠTRUKTÚRY =====
     addStructure("Springfield", 2312, -217, "Pillager tower", "Grankolandia", -1.5);
