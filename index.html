@@ -29,10 +29,10 @@
       background: #000;
     }
 
-    .menu-toggle,
-    .admin-toggle {
+    .menu-toggle {
       position: fixed;
       top: 12px;
+      left: 12px;
       z-index: 1200;
       width: 46px;
       height: 46px;
@@ -48,18 +48,14 @@
       justify-content: center;
     }
 
-    .menu-toggle:hover,
-    .admin-toggle:hover {
+    .menu-toggle:hover {
       background: rgba(35, 35, 35, 0.98);
     }
 
-    .menu-toggle { left: 12px; }
-    .admin-toggle { right: 12px; }
-
-    .panel,
-    .admin-panel {
+    .panel {
       position: fixed;
       top: 12px;
+      left: 12px;
       z-index: 1100;
       background: rgba(20, 20, 20, 0.95);
       padding: 12px;
@@ -71,28 +67,16 @@
       opacity: 0;
       pointer-events: none;
       transition: transform 0.25s ease, opacity 0.25s ease;
-    }
-
-    .panel {
-      left: 12px;
       transform: translateX(-380px);
     }
 
-    .admin-panel {
-      right: 12px;
-      transform: translateX(380px);
-      border: 1px solid rgba(90, 140, 255, 0.4);
-    }
-
-    .panel.open,
-    .admin-panel.open {
+    .panel.open {
       transform: translateX(0);
       opacity: 1;
       pointer-events: auto;
     }
 
-    .panel h2,
-    .admin-panel h2 {
+    .panel h2 {
       margin: 0 0 10px 0;
       font-size: 18px;
       padding-right: 42px;
@@ -116,8 +100,7 @@
       background: #3a3a3a;
     }
 
-    .panel label,
-    .admin-panel label {
+    .panel label {
       display: block;
       margin-top: 8px;
       font-size: 13px;
@@ -125,12 +108,7 @@
     }
 
     .panel input[type="number"],
-    .panel input[type="text"],
-    .panel select,
-    .admin-panel input[type="number"],
-    .admin-panel input[type="text"],
-    .admin-panel select,
-    .admin-panel textarea {
+    .panel input[type="text"] {
       width: 100%;
       box-sizing: border-box;
       margin-top: 4px;
@@ -143,23 +121,14 @@
       font-size: 14px;
     }
 
-    .admin-panel textarea {
-      min-height: 110px;
-      resize: vertical;
-      font-family: Consolas, monospace;
-      line-height: 1.4;
-    }
-
-    .panel input[type="checkbox"],
-    .admin-panel input[type="checkbox"] {
+    .panel input[type="checkbox"] {
       width: auto;
       margin: 0;
       padding: 0;
       accent-color: #2d6cdf;
     }
 
-    .panel button,
-    .admin-panel button {
+    .panel button {
       width: 100%;
       margin-top: 8px;
       padding: 10px;
@@ -171,29 +140,11 @@
       cursor: pointer;
     }
 
-    .panel button:hover,
-    .admin-panel button:hover {
+    .panel button:hover {
       background: #245dc2;
     }
 
-    .admin-panel button.secondary {
-      background: #353535;
-    }
-
-    .admin-panel button.secondary:hover {
-      background: #454545;
-    }
-
-    .admin-panel button.danger {
-      background: #a52a2a;
-    }
-
-    .admin-panel button.danger:hover {
-      background: #8f2121;
-    }
-
-    .coords-box,
-    .admin-box {
+    .coords-box {
       margin-top: 10px;
       padding: 10px;
       background: #1a1a1a;
@@ -254,50 +205,10 @@
       opacity: 0.85;
     }
 
-    .admin-status-ok { color: #7bff90; }
-    .admin-status-off { color: #ff8a8a; }
-    .admin-inline {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .admin-inline > * {
-      flex: 1;
-    }
-
-    .mini-note {
-      font-size: 12px;
-      opacity: 0.78;
-      margin-top: 6px;
-      line-height: 1.4;
-    }
-
-    .draw-point-list {
-      margin-top: 8px;
-      font-family: Consolas, monospace;
-      font-size: 12px;
-      white-space: pre-wrap;
-      background: #111;
-      padding: 8px;
-      border-radius: 8px;
-      border: 1px solid #2b2b2b;
-      max-height: 120px;
-      overflow: auto;
-    }
-
     @media (max-width: 900px) {
-      .panel,
-      .admin-panel {
-        width: calc(100% - 24px);
-      }
-
       .panel {
+        width: calc(100% - 24px);
         transform: translateX(calc(-100% - 20px));
-      }
-
-      .admin-panel {
-        transform: translateX(calc(100% + 20px));
       }
     }
 
@@ -335,7 +246,6 @@
 
     .marker-city { background: #c1121f; }
     .marker-structure { background: #163a70; }
-    .marker-admin { background: #f4b400; }
 
     .state-label {
       color: #e5e5e5;
@@ -353,7 +263,6 @@
       image-rendering: pixelated;
     }
 
-    .region-label,
     .river-label,
     .lake-label,
     .sea-label,
@@ -366,16 +275,6 @@
       pointer-events: none;
       image-rendering: pixelated;
       font-weight: bold;
-    }
-
-    .region-label {
-      color: #d6d6d6;
-      font-size: 18px;
-      text-shadow:
-        2px 2px 0 rgba(0, 0, 0, 0.7),
-        -1px -1px 0 rgba(0, 0, 0, 0.7),
-        1px -1px 0 rgba(0, 0, 0, 0.7),
-        -1px 1px 0 rgba(0, 0, 0, 0.7);
     }
 
     .river-label {
@@ -430,13 +329,14 @@
 </head>
 <body>
   <button class="menu-toggle" id="menuToggle" title="Otvoriť menu">☰</button>
+
   <div class="panel" id="sidePanel">
     <button class="close-panel" id="closeLeftPanel" title="Zavrieť">×</button>
     <h2>Server mapa</h2>
 
     <div class="section-title">Vyhľadávanie</div>
-    <label for="searchInput">Názov mesta / štruktúry / regiónu / vody</label>
-    <input id="searchInput" type="text" placeholder="napr. Nóra, Norfolk, Dunaj..." autocomplete="off" />
+    <label for="searchInput">Názov mesta / štruktúry / štátu / vody</label>
+    <input id="searchInput" type="text" placeholder="napr. Valkýria, Norfolk, Dunaj..." autocomplete="off" />
     <div id="searchResults" class="search-results"></div>
 
     <div class="section-title">Súradnice</div>
@@ -477,11 +377,6 @@
       </label>
 
       <label style="display:flex; align-items:center; gap:8px; margin-top:8px;">
-        <input type="checkbox" id="toggleRegions" checked />
-        Regióny
-      </label>
-
-      <label style="display:flex; align-items:center; gap:8px; margin-top:8px;">
         <input type="checkbox" id="toggleLandforms" checked />
         Prírodné oblasti
       </label>
@@ -489,96 +384,6 @@
 
     <div class="hint">
       Mapa je nastavená na rozsah X/Z od -7000 do +7000.
-    </div>
-  </div>
-
-    <div id="adminContent" style="display:none;">
-      <div class="section-title">Čo chceš robiť</div>
-      <label for="adminMode">Režim</label>
-      <select id="adminMode">
-        <option value="select">Vybrať / upraviť objekt</option>
-        <option value="waypoint">Pridať waypoint</option>
-        <option value="label">Pridať názov</option>
-        <option value="border">Kresliť hranicu</option>
-      </select>
-
-      <div class="admin-box" id="adminHelpBox">
-        Klikni na mapu podľa zvoleného režimu.
-      </div>
-
-      <div class="section-title">Formulár</div>
-      <label for="adminObjectType">Typ objektu</label>
-      <select id="adminObjectType">
-        <option value="city">Mesto</option>
-        <option value="structure">Štruktúra</option>
-        <option value="water">Voda</option>
-        <option value="landform">Prírodná oblasť</option>
-        <option value="region">Región</option>
-        <option value="state">Štát</option>
-        <option value="customLabel">Vlastný názov</option>
-      </select>
-
-      <label for="adminName">Názov</label>
-      <input id="adminName" type="text" placeholder="napr. Nové mesto" />
-
-      <label for="adminSubtype">Typ / popis</label>
-      <input id="adminSubtype" type="text" placeholder="napr. Dedina, Rieka, Hrad..." />
-
-      <label for="adminState">Štát / oblasť</label>
-      <input id="adminState" type="text" placeholder="napr. Valkýria" />
-
-      <div class="admin-inline">
-        <div>
-          <label for="adminX">X</label>
-          <input id="adminX" type="number" placeholder="X" />
-        </div>
-        <div>
-          <label for="adminZ">Z</label>
-          <input id="adminZ" type="number" placeholder="Z" />
-        </div>
-      </div>
-
-      <div class="admin-inline">
-        <div>
-          <label for="adminMinZoom">Min zoom</label>
-          <input id="adminMinZoom" type="number" step="0.25" value="-1.5" />
-        </div>
-        <div>
-          <label for="adminMaxZoom">Max zoom</label>
-          <input id="adminMaxZoom" type="number" step="0.25" value="999" />
-        </div>
-      </div>
-
-      <label for="adminLabelClass">CSS trieda názvu</label>
-      <select id="adminLabelClass">
-        <option value="custom-label">Vlastný názov</option>
-        <option value="region-label">Región</option>
-        <option value="river-label">Rieka</option>
-        <option value="lake-label">Jazero</option>
-        <option value="sea-label">More</option>
-        <option value="landform-label">Prírodná oblasť</option>
-        <option value="state-label">Štát</option>
-      </select>
-
-      <label for="adminBorderColor">Farba hranice</label>
-      <input id="adminBorderColor" type="text" value="#ff6b6b" />
-
-      <label for="adminPointsOutput">Body hranice / export</label>
-      <textarea id="adminPointsOutput" placeholder="Tu sa objavia body hranice alebo export kód."></textarea>
-
-      <div class="draw-point-list" id="drawPointList">Žiadne body hranice.</div>
-
-      <button id="saveAdminObject">Uložiť objekt na mapu</button>
-      <button id="updateSelectedObject" class="secondary">Prepísať vybraný objekt</button>
-      <button id="deleteSelectedObject" class="danger">Vymazať vybraný objekt</button>
-      <button id="startNewBorder" class="secondary">Začať novú hranicu</button>
-      <button id="undoBorderPoint" class="secondary">Zmazať posledný bod hranice</button>
-      <button id="finishBorderToTextarea" class="secondary">Dať body hranice do poľa vyššie</button>
-      <button id="copyExportCode" class="secondary">Skopírovať export kód</button>
-
-      <div class="mini-note">
-        Admin režim v tejto verzii funguje priamo v prehliadači. Zmeny sa neukladajú do súboru automaticky, preto je tam export kód, ktorý si potom vložíš do sekcie dát.
-      </div>
     </div>
   </div>
 
@@ -615,6 +420,7 @@
     map.fitBounds(bounds);
 
     let searchMarker = null;
+
     function mcToPixel(x, z) {
       const px = x - mcMinX;
       const py = mcMaxZ - z;
@@ -644,6 +450,7 @@
 
     menuToggle.addEventListener("click", () => togglePanel(sidePanel));
     document.getElementById("closeLeftPanel").addEventListener("click", () => sidePanel.classList.remove("open"));
+
     const cityIcon = L.divIcon({
       className: "",
       html: `<div class="pixel-marker marker-city"></div>`,
@@ -660,35 +467,18 @@
       popupAnchor: [0, -20]
     });
 
-    const adminPointIcon = L.divIcon({
-      className: "",
-      html: `<div class="pixel-marker marker-admin"></div>`,
-      iconSize: [18, 24],
-      iconAnchor: [9, 24],
-      popupAnchor: [0, -20]
-    });
-
     const citiesLayer = L.layerGroup().addTo(map);
     const structuresLayer = L.layerGroup().addTo(map);
     const waterLayer = L.layerGroup().addTo(map);
     const statesLayer = L.layerGroup().addTo(map);
-    const regionsLayer = L.layerGroup().addTo(map);
     const landformsLayer = L.layerGroup().addTo(map);
-    const adminDrawLayer = L.layerGroup().addTo(map);
 
     const allVisibilityUpdaters = [];
     const searchableItems = [];
-    const adminObjects = [];
 
     function registerUpdater(fn) {
       allVisibilityUpdaters.push(fn);
       fn();
-      return fn;
-    }
-
-    function unregisterUpdater(fn) {
-      const index = allVisibilityUpdaters.indexOf(fn);
-      if (index >= 0) allVisibilityUpdaters.splice(index, 1);
     }
 
     function isChecked(id) {
@@ -701,44 +491,6 @@
 
     function addToSearchIndex(item) {
       searchableItems.push(item);
-    }
-
-    function removeFromSearchIndex(item) {
-      const index = searchableItems.indexOf(item);
-      if (index >= 0) searchableItems.splice(index, 1);
-    }
-
-    function registerAdminObject(item) {
-      adminObjects.push(item);
-      if (item.centerX !== undefined && item.centerZ !== undefined) {
-        addToSearchIndex(item);
-      }
-      return item;
-    }
-
-    function removeLayerIfPresent(layer, obj) {
-      if (obj && layer && layer.hasLayer(obj)) layer.removeLayer(obj);
-    }
-
-    function clearObjectLayers(adminItem) {
-      if (!adminItem) return;
-      if (adminItem.layer && adminItem.leafletObject) removeLayerIfPresent(adminItem.layer, adminItem.leafletObject);
-      if (adminItem.labelLayer && adminItem.labelObject) removeLayerIfPresent(adminItem.labelLayer, adminItem.labelObject);
-      if (adminItem.extraLayers) {
-        adminItem.extraLayers.forEach(entry => removeLayerIfPresent(entry.layer, entry.object));
-      }
-      if (adminItem.visibilityUpdater) unregisterUpdater(adminItem.visibilityUpdater);
-      if (adminItem.secondaryUpdater) unregisterUpdater(adminItem.secondaryUpdater);
-    }
-
-    function deleteAdminObject(adminItem) {
-      if (!adminItem) return;
-      clearObjectLayers(adminItem);
-      removeFromSearchIndex(adminItem);
-      const index = adminObjects.indexOf(adminItem);
-      if (index >= 0) adminObjects.splice(index, 1);
-      if (selectedAdminItem === adminItem) selectedAdminItem = null;
-      refreshVisibility();
     }
 
     function flyToMcCoords(x, z, zoom = 0, popupHtml = null) {
@@ -764,7 +516,6 @@
         structure: "toggleStructures",
         water: "toggleWater",
         state: "toggleStates",
-        region: "toggleRegions",
         landform: "toggleLandforms",
         customLabel: "toggleLandforms"
       };
@@ -834,144 +585,10 @@
         .sort((a, b) => {
           const aStarts = normalizeText(a.name).startsWith(q) ? 1 : 0;
           const bStarts = normalizeText(b.name).startsWith(q) ? 1 : 0;
-          return bStarts - aStarts || a.name.localeCompare(b.name, 'sk');
+          return bStarts - aStarts || a.name.localeCompare(b.name, "sk");
         });
 
       renderSearchResults(results);
-    }
-
-    function setAdminStatus(text, ok = false) {
-      const status = document.getElementById("adminStatus");
-      status.textContent = text;
-      status.className = ok ? "admin-status-ok" : "admin-status-off";
-    }
-
-    function updateAdminHelp() {
-      const mode = document.getElementById("adminMode").value;
-      const box = document.getElementById("adminHelpBox");
-      if (!adminUnlocked) {
-        box.innerHTML = "Admin režim je zamknutý.";
-        return;
-      }
-      if (mode === "select") box.innerHTML = "Klikni na existujúci objekt na mape a načíta sa do formulára.";
-      if (mode === "waypoint") box.innerHTML = "Klikni na mapu a doplnia sa X/Z pre nový waypoint.";
-      if (mode === "label") box.innerHTML = "Klikni na mapu a doplnia sa X/Z pre nový názov.";
-      if (mode === "border") box.innerHTML = "Klikaj na mapu a pridávaj body hranice. Potom použi tlačidlo na export alebo uloženie.";
-    }
-
-    function setAdminCoords(x, z) {
-      document.getElementById("adminX").value = x;
-      document.getElementById("adminZ").value = z;
-    }
-
-    function fillAdminFormFromItem(item) {
-      if (!item) return;
-      selectedAdminItem = item;
-      document.getElementById("adminObjectType").value = item.kind;
-      document.getElementById("adminName").value = item.name || "";
-      document.getElementById("adminSubtype").value = item.subtype || "";
-      document.getElementById("adminState").value = item.state || "";
-      document.getElementById("adminX").value = item.centerX ?? "";
-      document.getElementById("adminZ").value = item.centerZ ?? "";
-      document.getElementById("adminMinZoom").value = item.minZoom ?? -1.5;
-      document.getElementById("adminMaxZoom").value = item.maxZoom ?? 999;
-      document.getElementById("adminBorderColor").value = item.borderColor || "#ff6b6b";
-      document.getElementById("adminLabelClass").value = item.labelClass || "custom-label";
-      document.getElementById("adminPointsOutput").value = item.points ? JSON.stringify(item.points, null, 2) : "";
-      updateAdminHelp();
-    }
-
-    function updateDrawPointList() {
-      const box = document.getElementById("drawPointList");
-      if (!drawnBorderPoints.length) {
-        box.textContent = "Žiadne body hranice.";
-        return;
-      }
-      box.textContent = drawnBorderPoints.map((p, i) => `${i + 1}. { x: ${p.x}, z: ${p.z} }`).join("\n");
-    }
-
-    function redrawBorderPreview() {
-      drawnBorderMarkers.forEach(marker => adminDrawLayer.removeLayer(marker));
-      drawnBorderMarkers = [];
-
-      if (previewBorderPolyline) {
-        adminDrawLayer.removeLayer(previewBorderPolyline);
-        previewBorderPolyline = null;
-      }
-
-      drawnBorderPoints.forEach(point => {
-        const marker = L.marker(mcToPixel(point.x, point.z), { icon: adminPointIcon }).addTo(adminDrawLayer);
-        drawnBorderMarkers.push(marker);
-      });
-
-      if (drawnBorderPoints.length >= 2) {
-        previewBorderPolyline = L.polyline(drawnBorderPoints.map(p => mcToPixel(p.x, p.z)), {
-          color: "#f4b400",
-          weight: 3,
-          dashArray: "6,6"
-        }).addTo(adminDrawLayer);
-      }
-
-      updateDrawPointList();
-    }
-
-    function clearBorderDrawing() {
-      drawnBorderPoints = [];
-      redrawBorderPreview();
-    }
-
-    function buildExportCodeFromForm() {
-      const kind = document.getElementById("adminObjectType").value;
-      const name = document.getElementById("adminName").value.trim();
-      const subtype = document.getElementById("adminSubtype").value.trim();
-      const state = document.getElementById("adminState").value.trim();
-      const x = Number(document.getElementById("adminX").value);
-      const z = Number(document.getElementById("adminZ").value);
-      const minZoom = Number(document.getElementById("adminMinZoom").value || -1.5);
-      const maxZoom = Number(document.getElementById("adminMaxZoom").value || 999);
-      const borderColor = document.getElementById("adminBorderColor").value.trim() || "#ff6b6b";
-      const labelClass = document.getElementById("adminLabelClass").value;
-
-      if (!name) return "";
-
-      if (kind === "city") return `addCity(${JSON.stringify(name)}, ${x}, ${z}, ${JSON.stringify(subtype || "Dedina")}, ${JSON.stringify(state || "Bez štátu")}, ${minZoom});`;
-      if (kind === "structure") return `addStructure(${JSON.stringify(name)}, ${x}, ${z}, ${JSON.stringify(subtype || "Štruktúra")}, ${JSON.stringify(state || "Bez štátu")}, ${minZoom});`;
-      if (kind === "water") return `addWater(${JSON.stringify(name)}, ${JSON.stringify(subtype || "Voda")}, ${x}, ${z}, ${JSON.stringify(labelClass === "custom-label" ? "river-label" : labelClass)}, 180, 28, ${minZoom}, ${maxZoom});`;
-      if (kind === "landform") return `addLandmarkArea(${JSON.stringify(name)}, ${JSON.stringify(subtype || "Oblasť")}, ${x}, ${z}, ${minZoom}, ${maxZoom}, ${JSON.stringify(labelClass === "custom-label" ? "landform-label" : labelClass)}, 220, 28);`;
-      if (kind === "customLabel") return `addCustomLabel(${JSON.stringify(name)}, ${x}, ${z}, ${JSON.stringify(labelClass)}, 220, 28, ${minZoom}, ${maxZoom});`;
-      if (kind === "region") {
-        const pointsText = document.getElementById("adminPointsOutput").value.trim();
-        return `addRegion(${JSON.stringify(name)}, ${JSON.stringify(state || "Bez štátu")}, ${pointsText || "[]"}, ${x}, ${z}, ${minZoom}, ${maxZoom}, { color: ${JSON.stringify(borderColor)}, weight: 2, fillOpacity: 0 });`;
-      }
-      if (kind === "state") {
-        const pointsText = document.getElementById("adminPointsOutput").value.trim();
-        return `addState(${JSON.stringify(name)}, ${pointsText || "[]"}, ${JSON.stringify(borderColor)}, ${x}, ${z}, ${maxZoom});`;
-      }
-      return "";
-    }
-
-    function safelyParsePoints(text) {
-      try {
-        const parsed = JSON.parse(text);
-        if (!Array.isArray(parsed)) return null;
-        return parsed.map(p => ({ x: Number(p.x), z: Number(p.z) }));
-      } catch (error) {
-        return null;
-      }
-    }
-
-    function attachSelectionHandler(adminItem) {
-      const clickable = [];
-      if (adminItem.leafletObject && adminItem.leafletObject.on) clickable.push(adminItem.leafletObject);
-      if (adminItem.labelObject && adminItem.labelObject.on) clickable.push(adminItem.labelObject);
-      clickable.forEach(obj => {
-        obj.on("click", function () {
-          if (!adminUnlocked || document.getElementById("adminMode").value !== "select") return;
-          suppressNextMapClick = true;
-          fillAdminFormFromItem(adminItem);
-          adminPanel.classList.add("open");
-        });
-      });
     }
 
     function createTextLabel(layer, toggleId, x, z, html, iconWidth, iconHeight, minZoom = -999, maxZoom = 999) {
@@ -985,7 +602,7 @@
         interactive: false
       });
 
-      const updater = registerUpdater(() => {
+      registerUpdater(() => {
         const zoom = map.getZoom();
         if (isChecked(toggleId) && zoom >= minZoom && zoom <= maxZoom) {
           if (!layer.hasLayer(label)) layer.addLayer(label);
@@ -994,7 +611,7 @@
         }
       });
 
-      return { label, updater };
+      return label;
     }
 
     function addCity(name, x, z, type, state, minZoom = -999) {
@@ -1006,7 +623,7 @@
           Súradnice: X ${x}, Z ${z}
         `);
 
-      const visibilityUpdater = registerUpdater(() => {
+      registerUpdater(() => {
         if (isChecked("toggleCities") && map.getZoom() >= minZoom) {
           if (!citiesLayer.hasLayer(marker)) citiesLayer.addLayer(marker);
         } else {
@@ -1014,7 +631,7 @@
         }
       });
 
-      const item = registerAdminObject({
+      addToSearchIndex({
         kind: "city",
         kindLabel: "Mesto",
         name,
@@ -1024,14 +641,10 @@
         centerZ: z,
         minZoom,
         maxZoom: 999,
-        zoom: Math.max(minZoom, 0),
-        layer: citiesLayer,
-        leafletObject: marker,
-        visibilityUpdater
+        zoom: Math.max(minZoom, 0)
       });
 
-      attachSelectionHandler(item);
-      return item;
+      return marker;
     }
 
     function addStructure(name, x, z, type, state, minZoom = -1.5) {
@@ -1043,7 +656,7 @@
           Súradnice: X ${x}, Z ${z}
         `);
 
-      const visibilityUpdater = registerUpdater(() => {
+      registerUpdater(() => {
         if (isChecked("toggleStructures") && map.getZoom() >= minZoom) {
           if (!structuresLayer.hasLayer(marker)) structuresLayer.addLayer(marker);
         } else {
@@ -1051,7 +664,7 @@
         }
       });
 
-      const item = registerAdminObject({
+      addToSearchIndex({
         kind: "structure",
         kindLabel: "Štruktúra",
         name,
@@ -1061,18 +674,14 @@
         centerZ: z,
         minZoom,
         maxZoom: 999,
-        zoom: Math.max(minZoom, 0),
-        layer: structuresLayer,
-        leafletObject: marker,
-        visibilityUpdater
+        zoom: Math.max(minZoom, 0)
       });
 
-      attachSelectionHandler(item);
-      return item;
+      return marker;
     }
 
     function addWater(name, type, x, z, className, iconWidth, iconHeight, minZoom = -999, maxZoom = 999) {
-      const { label, updater } = createTextLabel(
+      createTextLabel(
         waterLayer,
         "toggleWater",
         x,
@@ -1084,7 +693,7 @@
         maxZoom
       );
 
-      const item = registerAdminObject({
+      addToSearchIndex({
         kind: "water",
         kindLabel: "Voda",
         name,
@@ -1093,15 +702,8 @@
         centerZ: z,
         minZoom,
         maxZoom,
-        zoom: Math.max(minZoom, 0),
-        labelClass: className,
-        labelLayer: waterLayer,
-        labelObject: label,
-        visibilityUpdater: updater
+        zoom: Math.max(minZoom, 0)
       });
-
-      attachSelectionHandler(item);
-      return item;
     }
 
     function addState(name, points, borderColor, labelX = null, labelZ = null, labelMaxZoom = -1.5) {
@@ -1112,20 +714,26 @@
       });
 
       polygon.on("click", function (e) {
-        if (adminUnlocked && document.getElementById("adminMode").value === "select") return;
         const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
-        L.popup()
-          .setLatLng(e.latlng)
-          .setContent(`
+
+        document.getElementById("clickedCoords").innerHTML =
+          `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
+
+        if (searchMarker) {
+          map.removeLayer(searchMarker);
+        }
+
+        searchMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
+          .bindPopup(`
             <b>${name}</b><br>
             Typ: štát<br><br>
             X: ${mc.x}<br>
             Z: ${mc.z}
           `)
-          .openOn(map);
+          .openPopup();
       });
 
-      const visibilityUpdater = registerUpdater(() => {
+      registerUpdater(() => {
         if (isChecked("toggleStates")) {
           if (!statesLayer.hasLayer(polygon)) statesLayer.addLayer(polygon);
         } else {
@@ -1133,10 +741,8 @@
         }
       });
 
-      let labelObject = null;
-      let secondaryUpdater = null;
       if (labelX !== null && labelZ !== null) {
-        const created = createTextLabel(
+        createTextLabel(
           statesLayer,
           "toggleStates",
           labelX,
@@ -1147,11 +753,9 @@
           -999,
           labelMaxZoom
         );
-        labelObject = created.label;
-        secondaryUpdater = created.updater;
       }
 
-      const item = registerAdminObject({
+      addToSearchIndex({
         kind: "state",
         kindLabel: "Štát",
         name,
@@ -1159,97 +763,14 @@
         centerZ: labelZ ?? points[0]?.z ?? 0,
         minZoom: -999,
         maxZoom: labelMaxZoom,
-        zoom: -1,
-        borderColor,
-        points,
-        layer: statesLayer,
-        leafletObject: polygon,
-        labelLayer: statesLayer,
-        labelObject,
-        visibilityUpdater,
-        secondaryUpdater,
-        labelClass: "state-label"
+        zoom: -1
       });
 
-      attachSelectionHandler(item);
-      return item;
-    }
-
-    function addRegion(name, state, points, labelX, labelZ, minZoom = -1.5, maxZoom = -0.5, options = {}) {
-      const polygon = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
-        color: options.color || "#8f8f8f",
-        weight: options.weight || 2,
-        fillColor: options.fillColor || "#b5b5b5",
-        fillOpacity: options.fillOpacity ?? 0
-      });
-
-polygon.on("click", function (e) {
-  const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
-
-  document.getElementById("clickedCoords").innerHTML =
-    `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
-
-  if (searchMarker) {
-    map.removeLayer(searchMarker);
-  }
-
-  searchMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
-    .bindPopup(`
-      <b>${name}</b><br>
-      Typ: štát<br><br>
-      X: ${mc.x}<br>
-      Z: ${mc.z}
-    `)
-    .openPopup();
-});
-
-      const visibilityUpdater = registerUpdater(() => {
-        if (isChecked("toggleRegions")) {
-          if (!regionsLayer.hasLayer(polygon)) regionsLayer.addLayer(polygon);
-        } else {
-          if (regionsLayer.hasLayer(polygon)) regionsLayer.removeLayer(polygon);
-        }
-      });
-
-      const created = createTextLabel(
-        regionsLayer,
-        "toggleRegions",
-        labelX,
-        labelZ,
-        `<div class="region-label">${name}</div>`,
-        options.labelWidth || 180,
-        options.labelHeight || 28,
-        minZoom,
-        maxZoom
-      );
-
-      const item = registerAdminObject({
-        kind: "region",
-        kindLabel: "Región",
-        name,
-        state,
-        centerX: labelX,
-        centerZ: labelZ,
-        minZoom,
-        maxZoom,
-        zoom: 0,
-        borderColor: options.color || "#8f8f8f",
-        points,
-        layer: regionsLayer,
-        leafletObject: polygon,
-        labelLayer: regionsLayer,
-        labelObject: created.label,
-        visibilityUpdater,
-        secondaryUpdater: created.updater,
-        labelClass: "region-label"
-      });
-
-      attachSelectionHandler(item);
-      return item;
+      return polygon;
     }
 
     function addLandmarkArea(name, type, x, z, minZoom = -2, maxZoom = 0, className = "landform-label", width = 220, height = 28) {
-      const created = createTextLabel(
+      createTextLabel(
         landformsLayer,
         "toggleLandforms",
         x,
@@ -1261,7 +782,7 @@ polygon.on("click", function (e) {
         maxZoom
       );
 
-      const item = registerAdminObject({
+      addToSearchIndex({
         kind: "landform",
         kindLabel: "Prírodná oblasť",
         name,
@@ -1270,19 +791,12 @@ polygon.on("click", function (e) {
         centerZ: z,
         minZoom,
         maxZoom,
-        zoom: 0,
-        labelClass: className,
-        labelLayer: landformsLayer,
-        labelObject: created.label,
-        visibilityUpdater: created.updater
+        zoom: 0
       });
-
-      attachSelectionHandler(item);
-      return item;
     }
 
     function addCustomLabel(name, x, z, className = "custom-label", width = 220, height = 28, minZoom = -999, maxZoom = 999) {
-      const created = createTextLabel(
+      createTextLabel(
         landformsLayer,
         "toggleLandforms",
         x,
@@ -1294,7 +808,7 @@ polygon.on("click", function (e) {
         maxZoom
       );
 
-      const item = registerAdminObject({
+      addToSearchIndex({
         kind: "customLabel",
         kindLabel: "Vlastný názov",
         name,
@@ -1302,70 +816,8 @@ polygon.on("click", function (e) {
         centerZ: z,
         minZoom,
         maxZoom,
-        zoom: 0,
-        labelClass: className,
-        labelLayer: landformsLayer,
-        labelObject: created.label,
-        visibilityUpdater: created.updater
+        zoom: 0
       });
-
-      attachSelectionHandler(item);
-      return item;
-    }
-
-    function saveAdminObjectFromForm(replaceExisting = false) {
-      const kind = document.getElementById("adminObjectType").value;
-      const name = document.getElementById("adminName").value.trim();
-      const subtype = document.getElementById("adminSubtype").value.trim();
-      const state = document.getElementById("adminState").value.trim();
-      const x = Number(document.getElementById("adminX").value);
-      const z = Number(document.getElementById("adminZ").value);
-      const minZoom = Number(document.getElementById("adminMinZoom").value || -1.5);
-      const maxZoom = Number(document.getElementById("adminMaxZoom").value || 999);
-      const borderColor = document.getElementById("adminBorderColor").value.trim() || "#ff6b6b";
-      const labelClass = document.getElementById("adminLabelClass").value;
-      const pointsText = document.getElementById("adminPointsOutput").value.trim();
-
-      if (!name) {
-        alert("Zadaj názov.");
-        return;
-      }
-
-      if ((kind === "city" || kind === "structure" || kind === "water" || kind === "landform" || kind === "customLabel" || kind === "region" || kind === "state") && (Number.isNaN(x) || Number.isNaN(z))) {
-        alert("Najprv nastav X a Z.");
-        return;
-      }
-
-      if (replaceExisting && selectedAdminItem) {
-        deleteAdminObject(selectedAdminItem);
-      }
-
-      let created = null;
-      if (kind === "city") created = addCity(name, x, z, subtype || "Dedina", state || "Bez štátu", minZoom);
-      if (kind === "structure") created = addStructure(name, x, z, subtype || "Štruktúra", state || "Bez štátu", minZoom);
-      if (kind === "water") created = addWater(name, subtype || "Voda", x, z, labelClass === "custom-label" ? "river-label" : labelClass, 180, 28, minZoom, maxZoom);
-      if (kind === "landform") created = addLandmarkArea(name, subtype || "Oblasť", x, z, minZoom, maxZoom, labelClass === "custom-label" ? "landform-label" : labelClass, 220, 28);
-      if (kind === "customLabel") created = addCustomLabel(name, x, z, labelClass, 220, 28, minZoom, maxZoom);
-      if (kind === "region") {
-        const points = safelyParsePoints(pointsText);
-        if (!points || points.length < 3) {
-          alert("Región potrebuje aspoň 3 body vo formáte JSON.");
-          return;
-        }
-        created = addRegion(name, state || "Bez štátu", points, x, z, minZoom, maxZoom, { color: borderColor, weight: 2, fillOpacity: 0 });
-      }
-      if (kind === "state") {
-        const points = safelyParsePoints(pointsText);
-        if (!points || points.length < 3) {
-          alert("Štát potrebuje aspoň 3 body vo formáte JSON.");
-          return;
-        }
-        created = addState(name, points, borderColor, x, z, maxZoom);
-      }
-
-      selectedAdminItem = created;
-      document.getElementById("adminPointsOutput").value = buildExportCodeFromForm();
-      refreshVisibility();
     }
 
     map.on("click", function (e) {
@@ -1413,12 +865,10 @@ polygon.on("click", function (e) {
       searchItems(e.target.value);
     });
 
-    
     document.getElementById("toggleCities").addEventListener("change", refreshVisibility);
     document.getElementById("toggleStructures").addEventListener("change", refreshVisibility);
     document.getElementById("toggleWater").addEventListener("change", refreshVisibility);
     document.getElementById("toggleStates").addEventListener("change", refreshVisibility);
-    document.getElementById("toggleRegions").addEventListener("change", refreshVisibility);
     document.getElementById("toggleLandforms").addEventListener("change", refreshVisibility);
 
     map.on("zoomend", refreshVisibility);
@@ -1438,22 +888,6 @@ polygon.on("click", function (e) {
       { x: 686, z: 644 }, { x: 516, z: 346 }
     ], "#c1121f", 1710, 2026, -1.5);
 
-    addRegion("Fragment", "Valkýria", [
-      { x: -1072, z: 4210 }, { x: -884, z: 4236 }, { x: -719, z: 4479 }, { x: -1038, z: 4694 }, { x: -1150, z: 4415 }
-    ], -800, 4444, -1.5, -0.5, { color: "#ff6b6b", weight: 2, fillColor: "#ff6b6b", fillOpacity: 0, labelWidth: 220 });
-
-    addRegion("Panjam", "Valkýria", [
-      { x: -1072, z: 4717 }, { x: -1147, z: 4603 }, { x: -1292, z: 4561 }, { x: -1740, z: 4059 },
-      { x: -1381, z: 3882 }, { x: -1159, z: 3924 }, { x: -895, z: 3832 }, { x: -888, z: 3684 },
-      { x: -667, z: 3655 }, { x: -271, z: 4207 }
-    ], -810, 4066, -1.5, -0.5, { color: "#ff6b6b", weight: 2, fillColor: "#ff6b6b", fillOpacity: 0, labelWidth: 220 });
-
-    addRegion("Nóra", "Valkýria", [
-      { x: -263, z: 4203 }, { x: 237, z: 3988 }, { x: 53, z: 3876 }, { x: -46, z: 3769 },
-      { x: -123, z: 3606 }, { x: -145, z: 3447 }, { x: -256, z: 3346 }, { x: -243, z: 3060 },
-      { x: -309, z: 3033 }, { x: -461, z: 3330 }, { x: -674, z: 3645 }
-    ], -200, 3600, -1.5, -0.5, { color: "#ff6b6b", weight: 2 });
-
     addCity("Norfolk", 600, 850, "Továrenské mesto", "Valkýria");
     addCity("Spawn mesto", 250, -275, "Spawn", "Staliningrad & Berlin");
     addCity("Nóra", -375, 3770, "Hlavné mesto", "Valkýria");
@@ -1469,7 +903,7 @@ polygon.on("click", function (e) {
     addCity("Sĺňava", 2479, 1708, "Prístav", "Valkýria", -1.5);
     addCity("Panama", 2754, 1719, "Dedina", "Valkýria", -1.5);
     addCity("Florida", 3651, 1721, "Prístav", "Valkýria", -1.5);
-    addCity("Ninkagrad", -3128, -2433, "Prístav", "ĽDRP", -1,5);
+    addCity("Ninkagrad", -3128, -2433, "Prístav", "ĽDRP", -1.5);
 
     addStructure("Springfield", 2312, -217, "Pillager tower", "Grankolandia", -1.5);
     addStructure("The Pillager Tower", 569, 311, "Pillager tower", "Staliningrad & Berlin", -1.5);
@@ -1482,7 +916,6 @@ polygon.on("click", function (e) {
     addLandmarkArea("Veľké lúky", "Lúky", 1200, 500, -2, -0.5);
 
     refreshVisibility();
-    updateAdminHelp();
   </script>
 </body>
 </html>
