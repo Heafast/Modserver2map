@@ -430,8 +430,6 @@
 </head>
 <body>
   <button class="menu-toggle" id="menuToggle" title="Otvoriť menu">☰</button>
-  <button class="admin-toggle" id="adminToggle" title="Admin režim">⚙</button>
-
   <div class="panel" id="sidePanel">
     <button class="close-panel" id="closeLeftPanel" title="Zavrieť">×</button>
     <h2>Server mapa</h2>
@@ -493,20 +491,6 @@
       Mapa je nastavená na rozsah X/Z od -7000 do +7000.
     </div>
   </div>
-
-  <div class="admin-panel" id="adminPanel">
-    <button class="close-panel" id="closeRightPanel" title="Zavrieť">×</button>
-    <h2>Admin režim</h2>
-
-    <div class="admin-box">
-      <div><strong>Stav:</strong> <span id="adminStatus" class="admin-status-off">zamknuté</span></div>
-      <label for="adminPassword">Heslo</label>
-      <input id="adminPassword" type="password" placeholder="zadaj heslo" />
-      <button id="unlockAdmin">Odomknúť admin režim</button>
-      <div class="mini-note">
-        Zadaj admin heslo pre úpravu mapy.
-      </div>
-    </div>
 
     <div id="adminContent" style="display:none;">
       <div class="section-title">Čo chceš robiť</div>
@@ -607,8 +591,6 @@
   ></script>
 
   <script>
-    const ADMIN_PASSWORD = "AirbusA346";
-
     const imageWidth = 14000;
     const imageHeight = 14000;
 
@@ -633,13 +615,6 @@
     map.fitBounds(bounds);
 
     let searchMarker = null;
-    let adminUnlocked = false;
-    let selectedAdminItem = null;
-    let drawnBorderPoints = [];
-    let drawnBorderMarkers = [];
-    let previewBorderPolyline = null;
-    let suppressNextMapClick = false;
-
     function mcToPixel(x, z) {
       const px = x - mcMinX;
       const py = mcMaxZ - z;
@@ -661,19 +636,14 @@
     }
 
     const sidePanel = document.getElementById("sidePanel");
-    const adminPanel = document.getElementById("adminPanel");
     const menuToggle = document.getElementById("menuToggle");
-    const adminToggle = document.getElementById("adminToggle");
 
     function togglePanel(panel) {
       panel.classList.toggle("open");
     }
 
     menuToggle.addEventListener("click", () => togglePanel(sidePanel));
-    adminToggle.addEventListener("click", () => togglePanel(adminPanel));
     document.getElementById("closeLeftPanel").addEventListener("click", () => sidePanel.classList.remove("open"));
-    document.getElementById("closeRightPanel").addEventListener("click", () => adminPanel.classList.remove("open"));
-
     const cityIcon = L.divIcon({
       className: "",
       html: `<div class="pixel-marker marker-city"></div>`,
@@ -1393,27 +1363,12 @@
     }
 
     map.on("click", function (e) {
-      if (suppressNextMapClick) {
-        suppressNextMapClick = false;
-        return;
-      }
-
       const py = e.latlng.lat;
       const px = e.latlng.lng;
       const mc = pixelToMc(py, px);
 
       document.getElementById("clickedCoords").innerHTML =
         `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
-
-      const adminMode = document.getElementById("adminMode").value;
-      if (adminUnlocked) {
-        if (adminMode === "waypoint" || adminMode === "label") {
-          setAdminCoords(mc.x, mc.z);
-        } else if (adminMode === "border") {
-          drawnBorderPoints.push({ x: mc.x, z: mc.z });
-          redrawBorderPreview();
-        }
-      }
 
       if (searchMarker) {
         map.removeLayer(searchMarker);
@@ -1452,72 +1407,7 @@
       searchItems(e.target.value);
     });
 
-    document.getElementById("unlockAdmin").addEventListener("click", function () {
-      const entered = document.getElementById("adminPassword").value;
-      if (entered === ADMIN_PASSWORD) {
-        adminUnlocked = true;
-        document.getElementById("adminContent").style.display = "block";
-        setAdminStatus("odomknuté", true);
-        updateAdminHelp();
-      } else {
-        alert("Nesprávne heslo.");
-      }
-    });
-
-    document.getElementById("adminMode").addEventListener("change", updateAdminHelp);
-
-    document.getElementById("saveAdminObject").addEventListener("click", function () {
-      saveAdminObjectFromForm(false);
-    });
-
-    document.getElementById("updateSelectedObject").addEventListener("click", function () {
-      if (!selectedAdminItem) {
-        alert("Najprv vyber objekt v režime 'Vybrať / upraviť objekt'.");
-        return;
-      }
-      saveAdminObjectFromForm(true);
-    });
-
-    document.getElementById("deleteSelectedObject").addEventListener("click", function () {
-      if (!selectedAdminItem) {
-        alert("Najprv vyber objekt.");
-        return;
-      }
-      deleteAdminObject(selectedAdminItem);
-      document.getElementById("adminPointsOutput").value = "";
-      alert("Objekt bol zmazaný z aktuálne otvorenej mapy.");
-    });
-
-    document.getElementById("startNewBorder").addEventListener("click", function () {
-      clearBorderDrawing();
-      document.getElementById("adminMode").value = "border";
-      updateAdminHelp();
-    });
-
-    document.getElementById("undoBorderPoint").addEventListener("click", function () {
-      drawnBorderPoints.pop();
-      redrawBorderPreview();
-    });
-
-    document.getElementById("finishBorderToTextarea").addEventListener("click", function () {
-      document.getElementById("adminPointsOutput").value = JSON.stringify(drawnBorderPoints, null, 2);
-    });
-
-    document.getElementById("copyExportCode").addEventListener("click", async function () {
-      const code = buildExportCodeFromForm();
-      document.getElementById("adminPointsOutput").value = code;
-      if (!code) {
-        alert("Najprv vyplň objekt.");
-        return;
-      }
-      try {
-        await navigator.clipboard.writeText(code);
-        alert("Export kód skopírovaný.");
-      } catch (error) {
-        alert("Nepodarilo sa skopírovať, ale kód je v textovom poli.");
-      }
-    });
-
+    
     document.getElementById("toggleCities").addEventListener("change", refreshVisibility);
     document.getElementById("toggleStructures").addEventListener("change", refreshVisibility);
     document.getElementById("toggleWater").addEventListener("change", refreshVisibility);
