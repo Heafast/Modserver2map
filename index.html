@@ -20,6 +20,7 @@
       font-family: Arial, sans-serif;
       background: #111;
       color: white;
+      overflow: hidden;
     }
 
     #map {
@@ -28,23 +29,75 @@
       background: #000;
     }
 
+    .menu-toggle {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 1200;
+      width: 46px;
+      height: 46px;
+      border: none;
+      border-radius: 12px;
+      background: rgba(20, 20, 20, 0.95);
+      color: white;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-toggle:hover {
+      background: rgba(35, 35, 35, 0.98);
+    }
+
     .panel {
       position: fixed;
       top: 12px;
       left: 12px;
-      z-index: 1000;
-      background: rgba(20, 20, 20, 0.92);
+      z-index: 1100;
+      background: rgba(20, 20, 20, 0.95);
       padding: 12px;
       border-radius: 12px;
       box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
-      width: 300px;
+      width: 320px;
       max-height: calc(100vh - 24px);
       overflow: auto;
+      transform: translateX(-360px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .panel.open {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
     }
 
     .panel h2 {
       margin: 0 0 10px 0;
       font-size: 18px;
+      padding-right: 42px;
+    }
+
+    .close-panel {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 8px;
+      background: #2a2a2a;
+      color: white;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .close-panel:hover {
+      background: #3a3a3a;
     }
 
     .panel label {
@@ -54,7 +107,9 @@
       opacity: 0.9;
     }
 
-    .panel input[type="number"] {
+    .panel input[type="number"],
+    .panel input[type="text"],
+    .panel select {
       width: 100%;
       box-sizing: border-box;
       margin-top: 4px;
@@ -105,16 +160,59 @@
       opacity: 0.8;
     }
 
+    .search-results {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .search-result-item {
+      padding: 10px;
+      border-radius: 8px;
+      background: #222;
+      border: 1px solid #333;
+      cursor: pointer;
+    }
+
+    .search-result-item:hover {
+      background: #2c2c2c;
+    }
+
+    .search-result-title {
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .search-result-meta {
+      margin-top: 3px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .search-empty {
+      margin-top: 8px;
+      font-size: 13px;
+      opacity: 0.75;
+    }
+
+    .section-title {
+      margin-top: 12px;
+      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      opacity: 0.85;
+    }
+
     @media (max-width: 700px) {
       .panel {
         width: calc(100% - 24px);
-        left: 12px;
-        right: 12px;
-        top: 12px;
+        transform: translateX(calc(-100% - 20px));
       }
     }
 
-    /* ===== PIXEL MARKERS ===== */
     .pixel-marker {
       width: 18px;
       height: 18px;
@@ -147,15 +245,9 @@
       box-sizing: border-box;
     }
 
-    .marker-city {
-      background: #c1121f;
-    }
+    .marker-city { background: #c1121f; }
+    .marker-structure { background: #163a70; }
 
-    .marker-structure {
-      background: #163a70;
-    }
-
-    /* ===== TEXT LABELS ===== */
     .state-label {
       color: #e5e5e5;
       font-size: 26px;
@@ -172,125 +264,91 @@
       image-rendering: pixelated;
     }
 
+    .region-label,
+    .river-label,
+    .lake-label,
+    .sea-label,
+    .canal-label,
+    .strait-label,
+    .waterfall-label,
+    .landform-label {
+      white-space: nowrap;
+      pointer-events: none;
+      image-rendering: pixelated;
+      font-weight: bold;
+    }
+
     .region-label {
       color: #d6d6d6;
       font-size: 18px;
-      font-weight: bold;
-      letter-spacing: 1px;
       text-shadow:
         2px 2px 0 rgba(0, 0, 0, 0.7),
         -1px -1px 0 rgba(0, 0, 0, 0.7),
         1px -1px 0 rgba(0, 0, 0, 0.7),
         -1px 1px 0 rgba(0, 0, 0, 0.7);
-      white-space: nowrap;
-      pointer-events: none;
     }
 
     .river-label {
       color: #5ec3ff;
       font-size: 20px;
-      font-weight: bold;
       font-style: italic;
       text-shadow:
         2px 2px 0 rgba(0, 0, 0, 0.65),
         -1px -1px 0 rgba(0, 0, 0, 0.65),
         1px -1px 0 rgba(0, 0, 0, 0.65),
         -1px 1px 0 rgba(0, 0, 0, 0.65);
-      white-space: nowrap;
-      pointer-events: none;
-      image-rendering: pixelated;
     }
 
     .lake-label {
       color: #7fd0ff;
       font-size: 20px;
-      font-weight: bold;
       text-shadow:
         2px 2px 0 rgba(0, 0, 0, 0.65),
         -1px -1px 0 rgba(0, 0, 0, 0.65),
         1px -1px 0 rgba(0, 0, 0, 0.65),
         -1px 1px 0 rgba(0, 0, 0, 0.65);
-      white-space: nowrap;
-      pointer-events: none;
-      image-rendering: pixelated;
     }
 
     .sea-label {
       color: #2ea8ff;
       font-size: 28px;
-      font-weight: bold;
       letter-spacing: 2px;
       text-shadow:
         3px 3px 0 rgba(0, 0, 0, 0.7),
         -1px -1px 0 rgba(0, 0, 0, 0.7),
         1px -1px 0 rgba(0, 0, 0, 0.7),
         -1px 1px 0 rgba(0, 0, 0, 0.7);
-      white-space: nowrap;
-      pointer-events: none;
-      image-rendering: pixelated;
     }
 
-    .canal-label {
-      color: #7ac8ff;
-      font-size: 18px;
-      font-weight: bold;
-      text-shadow:
-        2px 2px 0 rgba(0, 0, 0, 0.65),
-        -1px -1px 0 rgba(0, 0, 0, 0.65),
-        1px -1px 0 rgba(0, 0, 0, 0.65),
-        -1px 1px 0 rgba(0, 0, 0, 0.65);
-      white-space: nowrap;
-      pointer-events: none;
-      image-rendering: pixelated;
-    }
-
-    .strait-label {
-      color: #8fd6ff;
-      font-size: 18px;
-      font-weight: bold;
-      text-shadow:
-        2px 2px 0 rgba(0, 0, 0, 0.65),
-        -1px -1px 0 rgba(0, 0, 0, 0.65),
-        1px -1px 0 rgba(0, 0, 0, 0.65),
-        -1px 1px 0 rgba(0, 0, 0, 0.65);
-      white-space: nowrap;
-      pointer-events: none;
-      image-rendering: pixelated;
-    }
-
-    .waterfall-label {
-      color: #b6e6ff;
-      font-size: 17px;
-      font-weight: bold;
-      text-shadow:
-        2px 2px 0 rgba(0, 0, 0, 0.65),
-        -1px -1px 0 rgba(0, 0, 0, 0.65),
-        1px -1px 0 rgba(0, 0, 0, 0.65),
-        -1px 1px 0 rgba(0, 0, 0, 0.65);
-      white-space: nowrap;
-      pointer-events: none;
-      image-rendering: pixelated;
-    }
-
+    .canal-label,
+    .strait-label,
+    .waterfall-label,
     .landform-label {
-      color: #d9d2b0;
-      font-size: 20px;
-      font-weight: bold;
       text-shadow:
-        2px 2px 0 rgba(0, 0, 0, 0.7),
-        -1px -1px 0 rgba(0, 0, 0, 0.7),
-        1px -1px 0 rgba(0, 0, 0, 0.7),
-        -1px 1px 0 rgba(0, 0, 0, 0.7);
-      white-space: nowrap;
-      pointer-events: none;
-      image-rendering: pixelated;
+        2px 2px 0 rgba(0, 0, 0, 0.65),
+        -1px -1px 0 rgba(0, 0, 0, 0.65),
+        1px -1px 0 rgba(0, 0, 0, 0.65),
+        -1px 1px 0 rgba(0, 0, 0, 0.65);
     }
+
+    .canal-label, .strait-label { color: #8fd6ff; font-size: 18px; }
+    .waterfall-label { color: #b6e6ff; font-size: 17px; }
+    .landform-label { color: #d9d2b0; font-size: 20px; }
   </style>
 </head>
 <body>
-  <div class="panel">
+  <button class="menu-toggle" id="menuToggle" title="Otvoriť menu">☰</button>
+
+  <div class="panel" id="sidePanel">
+    <button class="close-panel" id="closePanel" title="Zavrieť">×</button>
     <h2>Server mapa</h2>
 
+    <div class="section-title">Vyhľadávanie</div>
+    <label for="searchInput">Názov mesta / štruktúry / regiónu / vody</label>
+    <input id="searchInput" type="text" placeholder="napr. Nóra, Norfolk, Dunaj..." autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
+
+    <div class="section-title">Súradnice</div>
     <label for="coordX">Minecraft X</label>
     <input id="coordX" type="number" placeholder="napr. 1200" />
 
@@ -389,6 +447,169 @@
       return { x, z };
     }
 
+    // ===== MENU =====
+    const sidePanel = document.getElementById("sidePanel");
+    const menuToggle = document.getElementById("menuToggle");
+    const closePanel = document.getElementById("closePanel");
+
+    function openPanel() {
+      sidePanel.classList.add("open");
+    }
+
+    function closePanelFn() {
+      sidePanel.classList.remove("open");
+    }
+
+    menuToggle.addEventListener("click", () => {
+      sidePanel.classList.toggle("open");
+    });
+
+    closePanel.addEventListener("click", closePanelFn);
+
+    // ===== IKONY =====
+    const cityIcon = L.divIcon({
+      className: "",
+      html: `<div class="pixel-marker marker-city"></div>`,
+      iconSize: [18, 24],
+      iconAnchor: [9, 24],
+      popupAnchor: [0, -20]
+    });
+
+    const structureIcon = L.divIcon({
+      className: "",
+      html: `<div class="pixel-marker marker-structure"></div>`,
+      iconSize: [18, 24],
+      iconAnchor: [9, 24],
+      popupAnchor: [0, -20]
+    });
+
+    // ===== VRSTVY =====
+    const citiesLayer = L.layerGroup().addTo(map);
+    const structuresLayer = L.layerGroup().addTo(map);
+    const waterLayer = L.layerGroup().addTo(map);
+    const statesLayer = L.layerGroup().addTo(map);
+    const regionsLayer = L.layerGroup().addTo(map);
+    const landformsLayer = L.layerGroup().addTo(map);
+
+    const allVisibilityUpdaters = [];
+    const searchableItems = [];
+
+    function registerUpdater(fn) {
+      allVisibilityUpdaters.push(fn);
+      fn();
+    }
+
+    function isChecked(id) {
+      return document.getElementById(id).checked;
+    }
+
+    function refreshVisibility() {
+      allVisibilityUpdaters.forEach(fn => fn());
+    }
+
+    function addToSearchIndex(item) {
+      searchableItems.push(item);
+    }
+
+    function flyToMcCoords(x, z, zoom = 0, popupHtml = null) {
+      const [py, px] = mcToPixel(x, z);
+      map.setView([py, px], zoom);
+
+      if (searchMarker) {
+        map.removeLayer(searchMarker);
+      }
+
+      searchMarker = L.marker([py, px]).addTo(map);
+      if (popupHtml) {
+        searchMarker.bindPopup(popupHtml).openPopup();
+      }
+
+      document.getElementById("clickedCoords").innerHTML =
+        `<strong>Zvolený bod:</strong><br>X: ${x}<br>Z: ${z}`;
+    }
+
+    function ensureVisibleForSearch(item) {
+      const toggleMap = {
+        city: "toggleCities",
+        structure: "toggleStructures",
+        water: "toggleWater",
+        state: "toggleStates",
+        region: "toggleRegions",
+        landform: "toggleLandforms"
+      };
+
+      const toggleId = toggleMap[item.kind];
+      if (toggleId) {
+        document.getElementById(toggleId).checked = true;
+      }
+      refreshVisibility();
+    }
+
+    function getSearchLabel(item) {
+      const extra = [];
+      if (item.subtype) extra.push(item.subtype);
+      if (item.state) extra.push(item.state);
+      return extra.join(" • ");
+    }
+
+    function renderSearchResults(items) {
+      const box = document.getElementById("searchResults");
+      box.innerHTML = "";
+
+      if (!items.length) {
+        const div = document.createElement("div");
+        div.className = "search-empty";
+        div.textContent = "Nič sa nenašlo.";
+        box.appendChild(div);
+        return;
+      }
+
+      items.slice(0, 12).forEach(item => {
+        const el = document.createElement("div");
+        el.className = "search-result-item";
+        el.innerHTML = `
+          <div class="search-result-title">${item.name}</div>
+          <div class="search-result-meta">${item.kindLabel}${getSearchLabel(item) ? ' • ' + getSearchLabel(item) : ''}</div>
+        `;
+
+        el.addEventListener("click", () => {
+          ensureVisibleForSearch(item);
+          flyToMcCoords(
+            item.x,
+            item.z,
+            item.zoom ?? 0,
+            `<b>${item.name}</b><br>${item.kindLabel}${item.subtype ? `<br>Typ: ${item.subtype}` : ""}${item.state ? `<br>Štát: ${item.state}` : ""}<br>Súradnice: X ${item.x}, Z ${item.z}`
+          );
+          openPanel();
+        });
+
+        box.appendChild(el);
+      });
+    }
+
+    function searchItems(query) {
+      const q = query.trim().toLowerCase();
+      if (!q) {
+        document.getElementById("searchResults").innerHTML = "";
+        return;
+      }
+
+      const results = searchableItems
+        .filter(item => {
+          return [item.name, item.kindLabel, item.subtype, item.state]
+            .filter(Boolean)
+            .some(value => value.toLowerCase().includes(q));
+        })
+        .sort((a, b) => {
+          const aStarts = a.name.toLowerCase().startsWith(q) ? 1 : 0;
+          const bStarts = b.name.toLowerCase().startsWith(q) ? 1 : 0;
+          return bStarts - aStarts || a.name.localeCompare(b.name, 'sk');
+        });
+
+      renderSearchResults(results);
+    }
+
+    // ===== KLIK NA MAPU =====
     map.on("click", function (e) {
       const py = e.latlng.lat;
       const px = e.latlng.lng;
@@ -406,6 +627,7 @@
         .openPopup();
     });
 
+    // ===== SÚRADNICE =====
     document.getElementById("goToCoords").addEventListener("click", function () {
       const x = parseInt(document.getElementById("coordX").value, 10);
       const z = parseInt(document.getElementById("coordZ").value, 10);
@@ -420,16 +642,7 @@
         return;
       }
 
-      const [py, px] = mcToPixel(x, z);
-      map.setView([py, px], 0);
-
-      if (searchMarker) {
-        map.removeLayer(searchMarker);
-      }
-
-      searchMarker = L.marker([py, px]).addTo(map)
-        .bindPopup(`X: ${x}<br>Z: ${z}`)
-        .openPopup();
+      flyToMcCoords(x, z, 0, `X: ${x}<br>Z: ${z}`);
 
       document.getElementById("clickedCoords").innerHTML =
         `<strong>Nájdené súradnice:</strong><br>X: ${x}<br>Z: ${z}`;
@@ -439,44 +652,11 @@
       map.fitBounds(bounds);
     });
 
-    const cityIcon = L.divIcon({
-      className: "",
-      html: `<div class="pixel-marker marker-city"></div>`,
-      iconSize: [18, 24],
-      iconAnchor: [9, 24],
-      popupAnchor: [0, -20]
+    document.getElementById("searchInput").addEventListener("input", function (e) {
+      searchItems(e.target.value);
     });
 
-    const structureIcon = L.divIcon({
-      className: "",
-      html: `<div class="pixel-marker marker-structure"></div>`,
-      iconSize: [18, 24],
-      iconAnchor: [9, 24],
-      popupAnchor: [0, -20]
-    });
-
-    const citiesLayer = L.layerGroup().addTo(map);
-    const structuresLayer = L.layerGroup().addTo(map);
-    const waterLayer = L.layerGroup().addTo(map);
-    const statesLayer = L.layerGroup().addTo(map);
-    const regionsLayer = L.layerGroup().addTo(map);
-    const landformsLayer = L.layerGroup().addTo(map);
-
-    const allVisibilityUpdaters = [];
-
-    function registerUpdater(fn) {
-      allVisibilityUpdaters.push(fn);
-      fn();
-    }
-
-    function isChecked(id) {
-      return document.getElementById(id).checked;
-    }
-
-    function refreshVisibility() {
-      allVisibilityUpdaters.forEach(fn => fn());
-    }
-
+    // ===== POMOCNÉ FUNKCIE =====
     function addCity(name, x, z, type, state, minZoom = -999) {
       const marker = L.marker(mcToPixel(x, z), { icon: cityIcon })
         .bindPopup(`
@@ -492,6 +672,18 @@
         } else {
           if (citiesLayer.hasLayer(marker)) citiesLayer.removeLayer(marker);
         }
+      });
+
+      addToSearchIndex({
+        name,
+        kind: "city",
+        kindLabel: "Mesto",
+        subtype: type,
+        state,
+        x,
+        z,
+        zoom: Math.max(minZoom, 0),
+        marker
       });
 
       return marker;
@@ -512,6 +704,18 @@
         } else {
           if (structuresLayer.hasLayer(marker)) structuresLayer.removeLayer(marker);
         }
+      });
+
+      addToSearchIndex({
+        name,
+        kind: "structure",
+        kindLabel: "Štruktúra",
+        subtype: type,
+        state,
+        x,
+        z,
+        zoom: Math.max(minZoom, 0),
+        marker
       });
 
       return marker;
@@ -541,7 +745,7 @@
     }
 
     function addWater(name, type, x, z, className, iconWidth, iconHeight, minZoom = -999, maxZoom = 999) {
-      return addTextLabel(
+      const label = addTextLabel(
         waterLayer,
         "toggleWater",
         x,
@@ -552,6 +756,19 @@
         minZoom,
         maxZoom
       );
+
+      addToSearchIndex({
+        name,
+        kind: "water",
+        kindLabel: "Voda",
+        subtype: type,
+        x,
+        z,
+        zoom: Math.max(minZoom, 0),
+        marker: label
+      });
+
+      return label;
     }
 
     function addState(name, points, borderColor, labelX = null, labelZ = null, labelMaxZoom = -1.5) {
@@ -594,6 +811,16 @@
           -999,
           labelMaxZoom
         );
+
+        addToSearchIndex({
+          name,
+          kind: "state",
+          kindLabel: "Štát",
+          x: labelX,
+          z: labelZ,
+          zoom: -1,
+          marker: polygon
+        });
       }
 
       return polygon;
@@ -640,11 +867,22 @@
         maxZoom
       );
 
+      addToSearchIndex({
+        name,
+        kind: "region",
+        kindLabel: "Región",
+        state,
+        x: labelX,
+        z: labelZ,
+        zoom: 0,
+        marker: polygon
+      });
+
       return polygon;
     }
 
     function addLandmarkArea(name, type, x, z, minZoom = -2, maxZoom = 0, className = "landform-label", width = 220, height = 28) {
-      return addTextLabel(
+      const label = addTextLabel(
         landformsLayer,
         "toggleLandforms",
         x,
@@ -655,304 +893,52 @@
         minZoom,
         maxZoom
       );
+
+      addToSearchIndex({
+        name,
+        kind: "landform",
+        kindLabel: "Prírodná oblasť",
+        subtype: type,
+        x,
+        z,
+        zoom: 0,
+        marker: label
+      });
+
+      return label;
     }
 
-    // ===== ŠTÁTY =====
-
+    // ===== DÁTA =====
     addState("Valkýria", [
-      { x: 1128, z: 176 },
-      { x: 1522, z: 598 },
-      { x: 1252, z: 902 },
-      { x: 1729, z: 759 },
-      { x: 2401, z: 1105 },
-      { x: 2524, z: 1209 },
-      { x: 2961, z: 1401 },
-      { x: 3461, z: 1247 },
-      { x: 3888, z: 1606 },
-      { x: 4197, z: 1708 },
-      { x: 4205, z: 2124 },
-      { x: 3522, z: 2452 },
-      { x: 2976, z: 2980 },
-      { x: 2267, z: 3576 },
-      { x: 236, z: 3998 },
-      { x: -268, z: 4215 },
-      { x: -710, z: 4488 },
-      { x: -1065, z: 4725 },
-      { x: -1423, z: 5170 },
-      { x: -1584, z: 5513 },
-      { x: -1921, z: 5610 },
-      { x: -2210, z: 5768 },
-      { x: -2862, z: 5710 },
-      { x: -3296, z: 5588 },
-      { x: -3440, z: 5195 },
-      { x: -3180, z: 3504 },
-      { x: -2290, z: 3670 },
-      { x: -1732, z: 4056 },
-      { x: -1382, z: 3874 },
-      { x: -1152, z: 3926 },
-      { x: -894, z: 3820 },
-      { x: -888, z: 3680 },
-      { x: -674, z: 3648 },
-      { x: -306, z: 3032 },
-      { x: -150, z: 2786 },
-      { x: -950, z: 2330 },
-      { x: -1128, z: 1828 },
-      { x: -1008, z: 1450 },
-      { x: -236, z: 836 },
-      { x: 328, z: 822 },
-      { x: 686, z: 644 },
-      { x: 516, z: 346 }
+      { x: 1128, z: 176 }, { x: 1522, z: 598 }, { x: 1252, z: 902 }, { x: 1729, z: 759 },
+      { x: 2401, z: 1105 }, { x: 2524, z: 1209 }, { x: 2961, z: 1401 }, { x: 3461, z: 1247 },
+      { x: 3888, z: 1606 }, { x: 4197, z: 1708 }, { x: 4205, z: 2124 }, { x: 3522, z: 2452 },
+      { x: 2976, z: 2980 }, { x: 2267, z: 3576 }, { x: 236, z: 3998 }, { x: -268, z: 4215 },
+      { x: -710, z: 4488 }, { x: -1065, z: 4725 }, { x: -1423, z: 5170 }, { x: -1584, z: 5513 },
+      { x: -1921, z: 5610 }, { x: -2210, z: 5768 }, { x: -2862, z: 5710 }, { x: -3296, z: 5588 },
+      { x: -3440, z: 5195 }, { x: -3180, z: 3504 }, { x: -2290, z: 3670 }, { x: -1732, z: 4056 },
+      { x: -1382, z: 3874 }, { x: -1152, z: 3926 }, { x: -894, z: 3820 }, { x: -888, z: 3680 },
+      { x: -674, z: 3648 }, { x: -306, z: 3032 }, { x: -150, z: 2786 }, { x: -950, z: 2330 },
+      { x: -1128, z: 1828 }, { x: -1008, z: 1450 }, { x: -236, z: 836 }, { x: 328, z: 822 },
+      { x: 686, z: 644 }, { x: 516, z: 346 }
     ], "#c1121f", 1710, 2026, -1.5);
 
-    // ===== REGIÓNY VALKÝRIE =====
     addRegion("Fragment", "Valkýria", [
-      { x: -1072, z: 4210 },
-      { x: -884, z: 4236 },
-      { x: -719, z: 4479 },
-      { x: -1038, z: 4694 },
-      { x: -1150, z: 4415 }
-    ], -800, 4444, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2,
-      fillColor: "#ff6b6b",
-      fillOpacity: 0,
-      labelWidth: 220
-    });
+      { x: -1072, z: 4210 }, { x: -884, z: 4236 }, { x: -719, z: 4479 }, { x: -1038, z: 4694 }, { x: -1150, z: 4415 }
+    ], -800, 4444, -1.5, -0.5, { color: "#ff6b6b", weight: 2, fillColor: "#ff6b6b", fillOpacity: 0, labelWidth: 220 });
 
     addRegion("Panjam", "Valkýria", [
-      { x: -1072, z: 4717 },
-      { x: -1147, z: 4603 },
-      { x: -1292, z: 4561 },
-      { x: -1740, z: 4059 },
-      { x: -1381, z: 3882 },
-      { x: -1159, z: 3924 },
-      { x: -895, z: 3832 },
-      { x: -888, z: 3684 },
-      { x: -667, z: 3655 },
-      { x: -271, z: 4207 }
-    ], -810, 4066, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2,
-      fillColor: "#ff6b6b",
-      fillOpacity: 0,
-      labelWidth: 220
-    });
+      { x: -1072, z: 4717 }, { x: -1147, z: 4603 }, { x: -1292, z: 4561 }, { x: -1740, z: 4059 },
+      { x: -1381, z: 3882 }, { x: -1159, z: 3924 }, { x: -895, z: 3832 }, { x: -888, z: 3684 },
+      { x: -667, z: 3655 }, { x: -271, z: 4207 }
+    ], -810, 4066, -1.5, -0.5, { color: "#ff6b6b", weight: 2, fillColor: "#ff6b6b", fillOpacity: 0, labelWidth: 220 });
 
     addRegion("Nóra", "Valkýria", [
-      { x: -263, z: 4203 },
-      { x: 237, z: 3988 },
-      { x: 53, z: 3876 },
-      { x: -46, z: 3769 },
-      { x: -123, z: 3606 },
-      { x: -145, z: 3447 },
-      { x: -256, z: 3346 },
-      { x: -243, z: 3060 },
-      { x: -309, z: 3033 },
-      { x: -461, z: 3330 },
-      { x: -674, z: 3645 }
-    ], -200, 3600, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2
-    });
+      { x: -263, z: 4203 }, { x: 237, z: 3988 }, { x: 53, z: 3876 }, { x: -46, z: 3769 },
+      { x: -123, z: 3606 }, { x: -145, z: 3447 }, { x: -256, z: 3346 }, { x: -243, z: 3060 },
+      { x: -309, z: 3033 }, { x: -461, z: 3330 }, { x: -674, z: 3645 }
+    ], -200, 3600, -1.5, -0.5, { color: "#ff6b6b", weight: 2 });
 
-    addRegion("Skyland", "Valkýria", [
-      { x: -1738, z: 4068 },
-      { x: -2291, z: 3668 },
-      { x: -3196, z: 3515 },
-      { x: -3440, z: 5197 },
-      { x: -3293, z: 5579 },
-      { x: -2862, z: 5698 },
-      { x: -2213, z: 5756 },
-      { x: -1922, z: 5598 },
-      { x: -1585, z: 5502 },
-      { x: -1425, z: 5174 },
-      { x: -1218, z: 4957 },
-      { x: -1070, z: 4721 },
-      { x: -1147, z: 4602 },
-      { x: -1293, z: 4559 }
-    ], -2300, 5000, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2
-    });
-
-    addRegion("Sudland", "Valkýria", [
-      { x: 2238, z: 3549 },
-      { x: 1326, z: 2573 },
-      { x: 372, z: 3421 },
-      { x: 839, z: 3659 },
-      { x: 1342, z: 3785 },
-      { x: 2267, z: 3581 }
-    ], 1400, 3300, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2
-    });
-
-    addRegion("Wachlaf", "Valkýria", [
-      { x: 1324, z: 2571 },
-      { x: 2147, z: 2073 },
-      { x: 2537, z: 2607 },
-      { x: 2973, z: 2975 },
-      { x: 2267, z: 3579 }
-    ], 2200, 3000, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2
-    });
-
-    addRegion("Concordia", "Valkýria", [
-      { x: 2145, z: 2071 },
-      { x: 2164, z: 1961 },
-      { x: 2436, z: 1797 },
-      { x: 2554, z: 1741 },
-      { x: 2748, z: 1643 },
-      { x: 2954, z: 1603 },
-      { x: 3152, z: 1577 },
-      { x: 3577, z: 1591 },
-      { x: 3382, z: 2098 },
-      { x: 3520, z: 2467 },
-      { x: 2977, z: 2975 },
-      { x: 2530, z: 2601 }
-    ], 2900, 2100, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2
-    });
-
-    addRegion("Dauland", "Valkýria", [
-      { x: 3889, z: 1606 },
-      { x: 4195, z: 1707 },
-      { x: 4201, z: 2121 },
-      { x: 3521, z: 2470 },
-      { x: 3383, z: 2094 },
-      { x: 3578, z: 1589 }
-    ], 3800, 2000, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2
-    });
-
-    addRegion("Italy", "Valkýria", [
-      { x: 2224, z: 1329 },
-      { x: 2402, z: 1102 },
-      { x: 2527, z: 1213 },
-      { x: 2963, z: 1403 },
-      { x: 3463, z: 1245 },
-      { x: 3889, z: 1606 },
-      { x: 3153, z: 1576 },
-      { x: 2749, z: 1644 },
-      { x: 2165, z: 1959 }
-    ], 3000, 1500, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2
-    });
-
-    addRegion("Intora", "Valkýria", [
-      { x: 841, z: 3667 },
-      { x: 1337, z: 3798 },
-      { x: 238, z: 3990 },
-      { x: -47, z: 3766 },
-      { x: -121, z: 3621 },
-      { x: -140, z: 3455 },
-      { x: -258, z: 3347 },
-      { x: -248, z: 3061 },
-      { x: -308, z: 3033 },
-      { x: -140, z: 2782 },
-      { x: 121, z: 2474 },
-      { x: 514, z: 2153 },
-      { x: 1194, z: 1803 },
-      { x: 1824, z: 1934 },
-      { x: 1316, z: 2570 },
-      { x: 371, z: 3419 }
-    ], 600, 3000, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2
-    });
-
-    addRegion("Himalayas", "Valkýria", [
-      { x: 512, z: 2158 },
-      { x: 224, z: 1728 },
-      { x: 544, z: 1548 },
-      { x: 270, z: 1398 },
-      { x: -108, z: 1530 },
-      { x: -454, z: 1526 },
-      { x: -678, z: 1750 },
-      { x: -1134, z: 1814 },
-      { x: -954, z: 2316 },
-      { x: -152, z: 2790 },
-      { x: 122, z: 2471 }
-    ], -300, 2000, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2
-    });
-
-    addRegion("Centrálne planiny", "Valkýria", [
-      { x: 693, z: 664 },
-      { x: 744, z: 1256 },
-      { x: 1253, z: 893 },
-      { x: 1522, z: 599 },
-      { x: 1129, z: 178 },
-      { x: 518, z: 345 }
-    ], 1000, 500, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2
-    });
-
-    addRegion("Norfolk", "Valkýria", [
-      { x: 417, z: 1090 },
-      { x: 326, z: 826 },
-      { x: 686, z: 658 },
-      { x: 737, z: 1263 }
-    ], 600, 950, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2
-    });
-
-    addRegion("Pases", "Valkýria", [
-      { x: -681, z: 1750 },
-      { x: -452, z: 1525 },
-      { x: -105, z: 1528 },
-      { x: 274, z: 1398 },
-      { x: 543, z: 1547 },
-      { x: 732, z: 1262 },
-      { x: 414, z: 1087 },
-      { x: 326, z: 828 },
-      { x: 127, z: 824 },
-      { x: -238, z: 835 },
-      { x: -1008, z: 1440 },
-      { x: -1134, z: 1815 }
-    ], -200, 1300, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2
-    });
-
-    addRegion("Laeria", "Valkýria", [
-      { x: 546, z: 1552 },
-      { x: 738, z: 1259 },
-      { x: 1251, z: 903 },
-      { x: 1724, z: 753 },
-      { x: 1556, z: 957 },
-      { x: 1633, z: 1302 },
-      { x: 1193, z: 1802 },
-      { x: 509, z: 2154 },
-      { x: 225, z: 1729 }
-    ], 900, 1400, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2
-    });
-
-    addRegion("Havaj", "Valkýria", [
-      { x: 1560, z: 962 },
-      { x: 1639, z: 1314 },
-      { x: 1199, z: 1797 },
-      { x: 1824, z: 1943 },
-      { x: 1332, z: 2560 },
-      { x: 2146, z: 2067 },
-      { x: 2230, z: 1322 },
-      { x: 2405, z: 1105 },
-      { x: 1730, z: 761 }
-    ], 1800, 1500, -1.5, -0.5, {
-      color: "#ff6b6b",
-      weight: 2
-    });
-
-    // ===== MESTÁ =====
     addCity("Norfolk", 600, 850, "Továrenské mesto", "Valkýria");
     addCity("Spawn mesto", 250, -275, "Spawn", "Staliningrad & Berlin");
     addCity("Nóra", -375, 3770, "Hlavné mesto", "Valkýria");
@@ -960,32 +946,24 @@
     addCity("Uhlinovce", 839, 725, "Dedina", "Valkýria", -1.5);
     addCity("Veľká Pláň", 1180, 786, "Dedina", "Valkýria", -1.5);
     addCity("Cherry", 365, 1280, "Dedina", "Valkýria", -1.5);
-    addCity("middlelands", 3004, -1475, "Dedina", "Grankolandia", -1.5);
     addCity("York", 3268, 2356, "Dedina", "Valkýria", -1.5);
     addCity("Budeto", 905, 2816, "Dedina", "Valkýria", -1.5);
-    addCity("Welle", 2442, -1948, "Dedina", "Grankolandia", -1.5);
     addCity("Amsterdam", 1340, 3269, "Prístav", "Valkýria", -1.5);
     addCity("Rotterdam", 1261, 3025, "Prístav", "Valkýria", -1.5);
     addCity("Ardeny", 255, 2319, "Dedina", "Valkýria", -1.5);
     addCity("Sĺňava", 2479, 1708, "Prístav", "Valkýria", -1.5);
     addCity("Panama", 2754, 1719, "Dedina", "Valkýria", -1.5);
     addCity("Florida", 3651, 1721, "Prístav", "Valkýria", -1.5);
-    addCity("Tokyo", -1253, 3358, "Dedina", "Norddeutschland", -1.5);
-    addCity("Breeze", 3910, -625, "Prístav", "Grankolandia", -1.5);
-    addCity("Drahovce", -477, 1845, "Mesto", "Ľudová demokratická republika pracovníkov", -1.5);
 
-    // ===== ŠTRUKTÚRY =====
     addStructure("Springfield", 2312, -217, "Pillager tower", "Grankolandia", -1.5);
     addStructure("The Pillager Tower", 569, 311, "Pillager tower", "Neutrálna oblasť", -1.5);
     addStructure("Atlantis", 5649, -2798, "Better ocean monument", "Grankolandia", -1.5);
 
-    // ===== VODA =====
-    addWater("Dunaj", "river", 400, 840, "river-label", 90, 20, -1.25);
-    addWater("North Red Sea", "sea", 2003, 1120, "sea-label", 300, 40, -2);
-    addWater("Oko Hôr", "lake", 307, 4305, "lake-label", 140, 28, -1.25);
+    addWater("Dunaj", "Rieka", 400, 840, "river-label", 90, 20, -1.25);
+    addWater("North Red Sea", "More", 2003, 1120, "sea-label", 300, 40, -2);
+    addWater("Oko Hôr", "Jazero", 307, 4305, "lake-label", 140, 28, -1.25);
 
-    // ===== PRÍRODNÉ OBLASTI =====
-    addLandmarkArea("Veľké lúky", "lúky", 1200, 500, -2, -0.5);
+    addLandmarkArea("Veľké lúky", "Lúky", 1200, 500, -2, -0.5);
 
     // ===== EVENTY =====
     document.getElementById("toggleCities").addEventListener("change", refreshVisibility);
