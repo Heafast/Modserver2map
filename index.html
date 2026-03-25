@@ -377,6 +377,12 @@
       </label>
 
       <label style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+      <input type="checkbox" id="toggleRegions" checked />
+      Regióny
+    </label>
+      
+
+      <label style="display:flex; align-items:center; gap:8px; margin-top:8px;">
         <input type="checkbox" id="toggleLandforms" checked />
         Prírodné oblasti
       </label>
@@ -471,6 +477,7 @@
     const structuresLayer = L.layerGroup().addTo(map);
     const waterLayer = L.layerGroup().addTo(map);
     const statesLayer = L.layerGroup().addTo(map);
+    const regionsLayer = L.layerGroup().addTo(map);
     const landformsLayer = L.layerGroup().addTo(map);
 
     const allVisibilityUpdaters = [];
@@ -517,6 +524,7 @@
         water: "toggleWater",
         state: "toggleStates",
         landform: "toggleLandforms",
+        region: "toggleRegions",
         customLabel: "toggleLandforms"
       };
 
@@ -705,33 +713,103 @@
         zoom: Math.max(minZoom, 0)
       });
     }
+function addState(name, points, borderColor = "#c1121f", minZoom = -999) {
+  const polygon = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
+    color: borderColor,
+    weight: 8,
+    fillOpacity: 0
+  });
 
-    function addState(name, points, borderColor, labelX = null, labelZ = null, labelMaxZoom = -1.5) {
-      const polygon = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
-        color: borderColor,
-        weight: 8,
-        fillOpacity: 0
-      });
+  polygon.on("click", function (e) {
+    const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
 
-      polygon.on("click", function (e) {
-        const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
+    document.getElementById("clickedCoords").innerHTML =
+      `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
 
-        document.getElementById("clickedCoords").innerHTML =
-          `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
+    if (searchMarker) {
+      map.removeLayer(searchMarker);
+    }
 
-        if (searchMarker) {
-          map.removeLayer(searchMarker);
-        }
+    searchMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
+      .bindPopup(`
+        <b>${name}</b><br>
+        Typ: štát<br><br>
+        X: ${mc.x}<br>
+        Z: ${mc.z}
+      `)
+      .openPopup();
+  });
+function addRegion(name, state, points, borderColor = "#ff6b6b", minZoom = -1.5) {
+  const polygon = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
+    color: borderColor,
+    weight: 3,
+    fillOpacity: 0
+  });
 
-        searchMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
-          .bindPopup(`
-            <b>${name}</b><br>
-            Typ: štát<br><br>
-            X: ${mc.x}<br>
-            Z: ${mc.z}
-          `)
-          .openPopup();
-      });
+  polygon.on("click", function (e) {
+    const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
+
+    document.getElementById("clickedCoords").innerHTML =
+      `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
+
+    if (searchMarker) {
+      map.removeLayer(searchMarker);
+    }
+
+    searchMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
+      .bindPopup(`
+        <b>${name}</b><br>
+        Typ: región<br>
+        Štát: ${state}<br><br>
+        X: ${mc.x}<br>
+        Z: ${mc.z}
+      `)
+      .openPopup();
+  });
+
+  registerUpdater(() => {
+    if (isChecked("toggleRegions") && map.getZoom() >= minZoom) {
+      if (!regionsLayer.hasLayer(polygon)) regionsLayer.addLayer(polygon);
+    } else {
+      if (regionsLayer.hasLayer(polygon)) regionsLayer.removeLayer(polygon);
+    }
+  });
+
+  addToSearchIndex({
+    kind: "region",
+    kindLabel: "Región",
+    name,
+    state,
+    centerX: points[0]?.x ?? 0,
+    centerZ: points[0]?.z ?? 0,
+    minZoom,
+    maxZoom: 999,
+    zoom: Math.max(minZoom, 0)
+  });
+
+  return polygon;
+}
+  registerUpdater(() => {
+    if (isChecked("toggleStates") && map.getZoom() >= minZoom) {
+      if (!statesLayer.hasLayer(polygon)) statesLayer.addLayer(polygon);
+    } else {
+      if (statesLayer.hasLayer(polygon)) statesLayer.removeLayer(polygon);
+    }
+  });
+
+  addToSearchIndex({
+    kind: "state",
+    kindLabel: "Štát",
+    name,
+    centerX: points[0]?.x ?? 0,
+    centerZ: points[0]?.z ?? 0,
+    minZoom,
+    maxZoom: 999,
+    zoom: Math.max(minZoom, 0)
+  });
+
+  return polygon;
+}
 
       registerUpdater(() => {
         if (isChecked("toggleStates")) {
@@ -869,6 +947,7 @@
     document.getElementById("toggleStructures").addEventListener("change", refreshVisibility);
     document.getElementById("toggleWater").addEventListener("change", refreshVisibility);
     document.getElementById("toggleStates").addEventListener("change", refreshVisibility);
+    document.getElementById("toggleRegions").addEventListener("change", refreshVisibility);
     document.getElementById("toggleLandforms").addEventListener("change", refreshVisibility);
 
     map.on("zoomend", refreshVisibility);
