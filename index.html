@@ -1183,19 +1183,25 @@
         fillOpacity: options.fillOpacity ?? 0
       });
 
-      polygon.on("click", function (e) {
-        if (adminUnlocked && document.getElementById("adminMode").value === "select") return;
-        const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
-        L.popup()
-          .setLatLng(e.latlng)
-          .setContent(`
-            <b>${name}</b><br>
-            Štát: ${state}<br><br>
-            X: ${mc.x}<br>
-            Z: ${mc.z}
-          `)
-          .openOn(map);
-      });
+polygon.on("click", function (e) {
+  const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
+
+  document.getElementById("clickedCoords").innerHTML =
+    `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
+
+  if (searchMarker) {
+    map.removeLayer(searchMarker);
+  }
+
+  searchMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
+    .bindPopup(`
+      <b>${name}</b><br>
+      Typ: štát<br><br>
+      X: ${mc.x}<br>
+      Z: ${mc.z}
+    `)
+    .openPopup();
+});
 
       const visibilityUpdater = registerUpdater(() => {
         if (isChecked("toggleRegions")) {
@@ -1463,9 +1469,10 @@
     addCity("Sĺňava", 2479, 1708, "Prístav", "Valkýria", -1.5);
     addCity("Panama", 2754, 1719, "Dedina", "Valkýria", -1.5);
     addCity("Florida", 3651, 1721, "Prístav", "Valkýria", -1.5);
+    addCity("Ninkagrad", -3128, -2433, "Prístav", "ĽDRP", -1,5);
 
     addStructure("Springfield", 2312, -217, "Pillager tower", "Grankolandia", -1.5);
-    addStructure("The Pillager Tower", 569, 311, "Pillager tower", "Neutrálna oblasť", -1.5);
+    addStructure("The Pillager Tower", 569, 311, "Pillager tower", "Staliningrad & Berlin", -1.5);
     addStructure("Atlantis", 5649, -2798, "Better ocean monument", "Grankolandia", -1.5);
 
     addWater("Dunaj", "Rieka", 400, 840, "river-label", 90, 20, -1.25);
