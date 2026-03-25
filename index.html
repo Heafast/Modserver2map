@@ -247,22 +247,6 @@
     .marker-city { background: #c1121f; }
     .marker-structure { background: #163a70; }
 
-    .state-label {
-      color: #e5e5e5;
-      font-size: 26px;
-      font-weight: bold;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-shadow:
-        3px 3px 0 rgba(0, 0, 0, 0.7),
-        -1px -1px 0 rgba(0, 0, 0, 0.7),
-        1px -1px 0 rgba(0, 0, 0, 0.7),
-        -1px 1px 0 rgba(0, 0, 0, 0.7);
-      white-space: nowrap;
-      pointer-events: none;
-      image-rendering: pixelated;
-    }
-
     .river-label,
     .lake-label,
     .sea-label,
@@ -335,8 +319,8 @@
     <h2>Server mapa</h2>
 
     <div class="section-title">Vyhľadávanie</div>
-    <label for="searchInput">Názov mesta / štruktúry / štátu / vody</label>
-    <input id="searchInput" type="text" placeholder="napr. Valkýria, Norfolk, Dunaj..." autocomplete="off" />
+    <label for="searchInput">Názov mesta / štruktúry / štátu / regiónu / vody</label>
+    <input id="searchInput" type="text" placeholder="napr. Valkýria, Panjam, Norfolk..." autocomplete="off" />
     <div id="searchResults" class="search-results"></div>
 
     <div class="section-title">Súradnice</div>
@@ -377,10 +361,9 @@
       </label>
 
       <label style="display:flex; align-items:center; gap:8px; margin-top:8px;">
-      <input type="checkbox" id="toggleRegions" checked />
-      Regióny
-    </label>
-      
+        <input type="checkbox" id="toggleRegions" checked />
+        Regióny
+      </label>
 
       <label style="display:flex; align-items:center; gap:8px; margin-top:8px;">
         <input type="checkbox" id="toggleLandforms" checked />
@@ -523,8 +506,8 @@
         structure: "toggleStructures",
         water: "toggleWater",
         state: "toggleStates",
-        landform: "toggleLandforms",
         region: "toggleRegions",
+        landform: "toggleLandforms",
         customLabel: "toggleLandforms"
       };
 
@@ -713,135 +696,102 @@
         zoom: Math.max(minZoom, 0)
       });
     }
-function addState(name, points, borderColor = "#c1121f", minZoom = -999) {
-  const polygon = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
-    color: borderColor,
-    weight: 8,
-    fillOpacity: 0
-  });
 
-  polygon.on("click", function (e) {
-    const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
+    function addState(name, points, borderColor = "#c1121f", minZoom = -999) {
+      const polygon = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
+        color: borderColor,
+        weight: 8,
+        fillOpacity: 0
+      });
 
-    document.getElementById("clickedCoords").innerHTML =
-      `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
+      polygon.on("click", function (e) {
+        const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
 
-    if (searchMarker) {
-      map.removeLayer(searchMarker);
-    }
+        document.getElementById("clickedCoords").innerHTML =
+          `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
 
-    searchMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
-      .bindPopup(`
-        <b>${name}</b><br>
-        Typ: štát<br><br>
-        X: ${mc.x}<br>
-        Z: ${mc.z}
-      `)
-      .openPopup();
-  });
-function addRegion(name, state, points, borderColor = "#ff6b6b", minZoom = -1.5) {
-  const polygon = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
-    color: borderColor,
-    weight: 3,
-    fillOpacity: 0
-  });
+        if (searchMarker) {
+          map.removeLayer(searchMarker);
+        }
 
-  polygon.on("click", function (e) {
-    const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
-
-    document.getElementById("clickedCoords").innerHTML =
-      `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
-
-    if (searchMarker) {
-      map.removeLayer(searchMarker);
-    }
-
-    searchMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
-      .bindPopup(`
-        <b>${name}</b><br>
-        Typ: región<br>
-        Štát: ${state}<br><br>
-        X: ${mc.x}<br>
-        Z: ${mc.z}
-      `)
-      .openPopup();
-  });
-
-  registerUpdater(() => {
-    if (isChecked("toggleRegions") && map.getZoom() >= minZoom) {
-      if (!regionsLayer.hasLayer(polygon)) regionsLayer.addLayer(polygon);
-    } else {
-      if (regionsLayer.hasLayer(polygon)) regionsLayer.removeLayer(polygon);
-    }
-  });
-
-  addToSearchIndex({
-    kind: "region",
-    kindLabel: "Región",
-    name,
-    state,
-    centerX: points[0]?.x ?? 0,
-    centerZ: points[0]?.z ?? 0,
-    minZoom,
-    maxZoom: 999,
-    zoom: Math.max(minZoom, 0)
-  });
-
-  return polygon;
-}
-  registerUpdater(() => {
-    if (isChecked("toggleStates") && map.getZoom() >= minZoom) {
-      if (!statesLayer.hasLayer(polygon)) statesLayer.addLayer(polygon);
-    } else {
-      if (statesLayer.hasLayer(polygon)) statesLayer.removeLayer(polygon);
-    }
-  });
-
-  addToSearchIndex({
-    kind: "state",
-    kindLabel: "Štát",
-    name,
-    centerX: points[0]?.x ?? 0,
-    centerZ: points[0]?.z ?? 0,
-    minZoom,
-    maxZoom: 999,
-    zoom: Math.max(minZoom, 0)
-  });
-
-  return polygon;
-}
+        searchMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
+          .bindPopup(`
+            <b>${name}</b><br>
+            Typ: štát<br><br>
+            X: ${mc.x}<br>
+            Z: ${mc.z}
+          `)
+          .openPopup();
+      });
 
       registerUpdater(() => {
-        if (isChecked("toggleStates")) {
+        if (isChecked("toggleStates") && map.getZoom() >= minZoom) {
           if (!statesLayer.hasLayer(polygon)) statesLayer.addLayer(polygon);
         } else {
           if (statesLayer.hasLayer(polygon)) statesLayer.removeLayer(polygon);
         }
       });
 
-      if (labelX !== null && labelZ !== null) {
-        createTextLabel(
-          statesLayer,
-          "toggleStates",
-          labelX,
-          labelZ,
-          `<div class="state-label">${name}</div>`,
-          340,
-          36,
-          -999,
-          labelMaxZoom
-        );
-      }
-
       addToSearchIndex({
         kind: "state",
         kindLabel: "Štát",
         name,
-        centerX: labelX ?? points[0]?.x ?? 0,
-        centerZ: labelZ ?? points[0]?.z ?? 0,
-        minZoom: -999,
-        maxZoom: labelMaxZoom,
-        zoom: -1
+        centerX: points[0]?.x ?? 0,
+        centerZ: points[0]?.z ?? 0,
+        minZoom,
+        maxZoom: 999,
+        zoom: Math.max(minZoom, 0)
+      });
+
+      return polygon;
+    }
+
+    function addRegion(name, state, points, borderColor = "#ff6b6b", minZoom = -1.5) {
+      const polygon = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
+        color: borderColor,
+        weight: 3,
+        fillOpacity: 0
+      });
+
+      polygon.on("click", function (e) {
+        const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
+
+        document.getElementById("clickedCoords").innerHTML =
+          `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
+
+        if (searchMarker) {
+          map.removeLayer(searchMarker);
+        }
+
+        searchMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
+          .bindPopup(`
+            <b>${name}</b><br>
+            Typ: región<br>
+            Štát: ${state}<br><br>
+            X: ${mc.x}<br>
+            Z: ${mc.z}
+          `)
+          .openPopup();
+      });
+
+      registerUpdater(() => {
+        if (isChecked("toggleRegions") && map.getZoom() >= minZoom) {
+          if (!regionsLayer.hasLayer(polygon)) regionsLayer.addLayer(polygon);
+        } else {
+          if (regionsLayer.hasLayer(polygon)) regionsLayer.removeLayer(polygon);
+        }
+      });
+
+      addToSearchIndex({
+        kind: "region",
+        kindLabel: "Región",
+        name,
+        state,
+        centerX: points[0]?.x ?? 0,
+        centerZ: points[0]?.z ?? 0,
+        minZoom,
+        maxZoom: 999,
+        zoom: Math.max(minZoom, 0)
       });
 
       return polygon;
@@ -965,7 +915,20 @@ function addRegion(name, state, points, borderColor = "#ff6b6b", minZoom = -1.5)
       { x: -674, z: 3648 }, { x: -306, z: 3032 }, { x: -150, z: 2786 }, { x: -950, z: 2330 },
       { x: -1128, z: 1828 }, { x: -1008, z: 1450 }, { x: -236, z: 836 }, { x: 328, z: 822 },
       { x: 686, z: 644 }, { x: 516, z: 346 }
-    ], "#c1121f", 1710, 2026, -1.5);
+    ], "#c1121f");
+
+    addRegion("Panjam", "Valkýria", [
+      { x: -1072, z: 4717 },
+      { x: -1147, z: 4603 },
+      { x: -1292, z: 4561 },
+      { x: -1740, z: 4059 },
+      { x: -1381, z: 3882 },
+      { x: -1159, z: 3924 },
+      { x: -895, z: 3832 },
+      { x: -888, z: 3684 },
+      { x: -667, z: 3655 },
+      { x: -271, z: 4207 }
+    ], "#ff6b6b", -1.5);
 
     addCity("Norfolk", 600, 850, "Továrenské mesto", "Valkýria");
     addCity("Spawn mesto", 250, -275, "Spawn", "Staliningrad & Berlin");
