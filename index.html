@@ -542,7 +542,7 @@
         el.className = "search-result-item";
         el.innerHTML = `
           <div class="search-result-title">${item.name}</div>
-          <div class="search-result-meta">${item.kindLabel}${getSearchLabel(item) ? ' • ' + getSearchLabel(item) : ''}</div>
+          <div class="search-result-meta">${item.kindLabel}${getSearchLabel(item) ? " • " + getSearchLabel(item) : ""}</div>
         `;
 
         el.addEventListener("click", () => {
@@ -698,75 +698,53 @@
     }
 
     function addState(
-  name,
-  points,
-  borderColor = "#c1121f",
-  fillColor = borderColor,
-  fillOpacity = 0.12,
-  minZoom = -999,
-  fillMaxZoom = -0.75
-) {
-  const polygon = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
-    color: borderColor,
-    weight: 8,
-    fillColor: fillColor,
-    fillOpacity: 0
-  });
-
-  polygon.on("click", function (e) {
-    const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
-
-    document.getElementById("clickedCoords").innerHTML =
-      `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
-
-    if (searchMarker) {
-      map.removeLayer(searchMarker);
-    }
-
-    searchMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
-      .bindPopup(`
-        <b>${name}</b><br>
-        Typ: štát<br><br>
-        X: ${mc.x}<br>
-        Z: ${mc.z}
-      `)
-      .openPopup();
-  });
-
-  registerUpdater(() => {
-    const zoom = map.getZoom();
-    const shouldShow = isChecked("toggleStates") && zoom >= minZoom;
-
-    if (shouldShow) {
-      if (!statesLayer.hasLayer(polygon)) statesLayer.addLayer(polygon);
-
-      polygon.setStyle({
+      name,
+      points,
+      borderColor = "#c1121f",
+      fillColor = borderColor,
+      fillOpacity = 0.12,
+      minZoom = -999,
+      fillMaxZoom = -0.75
+    ) {
+      const polygon = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
         color: borderColor,
+        weight: 8,
         fillColor: fillColor,
-        fillOpacity: zoom <= fillMaxZoom ? fillOpacity : 0
+        fillOpacity: 0
       });
-    } else {
-      if (statesLayer.hasLayer(polygon)) statesLayer.removeLayer(polygon);
-    }
-  });
 
-  addToSearchIndex({
-    kind: "state",
-    kindLabel: "Štát",
-    name,
-    centerX: points[0]?.x ?? 0,
-    centerZ: points[0]?.z ?? 0,
-    minZoom,
-    maxZoom: 999,
-    zoom: Math.max(minZoom, 0)
-  });
+      polygon.on("click", function (e) {
+        const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
 
-  return polygon;
-}
+        document.getElementById("clickedCoords").innerHTML =
+          `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
+
+        if (searchMarker) {
+          map.removeLayer(searchMarker);
+        }
+
+        searchMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
+          .bindPopup(`
+            <b>${name}</b><br>
+            Typ: štát<br><br>
+            X: ${mc.x}<br>
+            Z: ${mc.z}
+          `)
+          .openPopup();
+      });
 
       registerUpdater(() => {
-        if (isChecked("toggleStates") && map.getZoom() >= minZoom) {
+        const zoom = map.getZoom();
+        const shouldShow = isChecked("toggleStates") && zoom >= minZoom;
+
+        if (shouldShow) {
           if (!statesLayer.hasLayer(polygon)) statesLayer.addLayer(polygon);
+
+          polygon.setStyle({
+            color: borderColor,
+            fillColor: fillColor,
+            fillOpacity: zoom <= fillMaxZoom ? fillOpacity : 0
+          });
         } else {
           if (statesLayer.hasLayer(polygon)) statesLayer.removeLayer(polygon);
         }
@@ -943,103 +921,107 @@
     map.on("zoomend", refreshVisibility);
 
     // ===== DÁTA =====
-addState("Ľudovo-demokratická Republika Pracovníkov", [
-  { x: -1576, z: -7000 },
-  { x: -1304, z: -6228 },
-  { x: -2452, z: -4470 },
-  { x: -2883, z: -4089 },
-  { x: -2440, z: -3708 },
-  { x: -1566, z: -3570 },
-  { x: -1304, z: -2904 },
-  { x: -1063, z: -1226 },
-  { x: -1047, z: -575 },
-  { x: -612, z: -99 },
-  { x: -25, z: -56 },
-  { x: 56, z: 76 },
-  { x: 119, z: 292 },
-  { x: 516, z: 345 },
-  { x: 686, z: 642 },
-  { x: 329, z: 823 },
-  { x: -236, z: 835 },
-  { x: -1668, z: 516 },
-  { x: -1876, z: 770 },
-  { x: -2008, z: 1013 },
-  { x: -2175, z: 976 },
-  { x: -2260, z: 1229 },
-  { x: -2559, z: 1674 },
-  { x: -2901, z: 2084 },
-  { x: -3311, z: 2510 },
-  { x: -3608, z: 2714 },
-  { x: -4576, z: 2679 },
-  { x: -5959, z: 1960 },
-  { x: -7000, z: 1402 },
-  { x: -7000, z: -7000 }
-], "#2f9e44", "#2f9e44", 0.10, -999, -0.75);
+
+    addState("Ľudovo-demokratická Republika Pracovníkov", [
+      { x: -1576, z: -7000 },
+      { x: -1304, z: -6228 },
+      { x: -2452, z: -4470 },
+      { x: -2883, z: -4089 },
+      { x: -2440, z: -3708 },
+      { x: -1566, z: -3570 },
+      { x: -1304, z: -2904 },
+      { x: -1063, z: -1226 },
+      { x: -1047, z: -575 },
+      { x: -612, z: -99 },
+      { x: -25, z: -56 },
+      { x: 56, z: 76 },
+      { x: 119, z: 292 },
+      { x: 516, z: 345 },
+      { x: 686, z: 642 },
+      { x: 329, z: 823 },
+      { x: -236, z: 835 },
+      { x: -1668, z: 516 },
+      { x: -1876, z: 770 },
+      { x: -2008, z: 1013 },
+      { x: -2175, z: 976 },
+      { x: -2260, z: 1229 },
+      { x: -2559, z: 1674 },
+      { x: -2901, z: 2084 },
+      { x: -3311, z: 2510 },
+      { x: -3608, z: 2714 },
+      { x: -4576, z: 2679 },
+      { x: -5959, z: 1960 },
+      { x: -7000, z: 1402 },
+      { x: -7000, z: -7000 }
+    ], "#2f9e44", "#2f9e44", 0.10, -999, -0.75);
 
     addState("Grankolandia", [
-  { x: 4199, z: 1700 },
-  { x: 3889, z: 1607 },
-  { x: 3460, z: 1247 },
-  { x: 2960, z: 1400 },
-  { x: 2521, z: 1209 },
-  { x: 2402, z: 1106 },
-  { x: 1728, z: 761 },
-  { x: 1254, z: 901 },
-  { x: 1522, z: 597 },
-  { x: 1129, z: 175 },
-  { x: 1533, z: -63 },
-  { x: 2180, z: -1839 },
-  { x: 2299, z: -2768 },
-  { x: 2300, z: -7000 },
-  { x: 7000, z: -7000 },
-  { x: 7000, z: 1700 }
-], "#d9b300", "#d9b300", 0.10, -999, -0.75);
+      { x: 4199, z: 1700 },
+      { x: 3889, z: 1607 },
+      { x: 3460, z: 1247 },
+      { x: 2960, z: 1400 },
+      { x: 2521, z: 1209 },
+      { x: 2402, z: 1106 },
+      { x: 1728, z: 761 },
+      { x: 1254, z: 901 },
+      { x: 1522, z: 597 },
+      { x: 1129, z: 175 },
+      { x: 1533, z: -63 },
+      { x: 2180, z: -1839 },
+      { x: 2299, z: -2768 },
+      { x: 2300, z: -7000 },
+      { x: 7000, z: -7000 },
+      { x: 7000, z: 1700 }
+    ], "#d9b300", "#d9b300", 0.10, -999, -0.75);
 
     addState("Berlin & Staliningrad", [
-  { x: 2300, z: -7000 },
-  { x: 2299, z: -2768 },
-  { x: 2178, z: -1841 },
-  { x: 1732, z: -636 },
-  { x: 1533, z: -63 },
-  { x: 1128, z: 176 },
-  { x: 515, z: 346 },
-  { x: 117, z: 288 },
-  { x: 55, z: 76 },
-  { x: 158, z: 85 },
-  { x: 139, z: -57 },
-  { x: -27, z: -55 },
-  { x: -608, z: -94 },
-  { x: -1047, z: -574 },
-  { x: -1061, z: -1226 },
-  { x: -1303, z: -2904 },
-  { x: -1566, z: -3571 },
-  { x: -2441, z: -3712 },
-  { x: -2883, z: -4088 },
-  { x: -2452, z: -4473 },
-  { x: -2023, z: -4967 },
-  { x: -1389, z: -5707 },
-  { x: -1303, z: -6227 },
-  { x: -1566, z: -7000 }
-], "#33c7c7", "#33c7c7", 0.11, -999, -0.75);
+      { x: 2300, z: -7000 },
+      { x: 2299, z: -2768 },
+      { x: 2178, z: -1841 },
+      { x: 1732, z: -636 },
+      { x: 1533, z: -63 },
+      { x: 1128, z: 176 },
+      { x: 515, z: 346 },
+      { x: 117, z: 288 },
+      { x: 55, z: 76 },
+      { x: 158, z: 85 },
+      { x: 139, z: -57 },
+      { x: -27, z: -55 },
+      { x: -608, z: -94 },
+      { x: -1047, z: -574 },
+      { x: -1061, z: -1226 },
+      { x: -1303, z: -2904 },
+      { x: -1566, z: -3571 },
+      { x: -2441, z: -3712 },
+      { x: -2883, z: -4088 },
+      { x: -2452, z: -4473 },
+      { x: -2023, z: -4967 },
+      { x: -1389, z: -5707 },
+      { x: -1303, z: -6227 },
+      { x: -1566, z: -7000 }
+    ], "#33c7c7", "#33c7c7", 0.11, -999, -0.75);
 
     addState("Spawn", [
-  { x: 55, z: 75 }, { x: 158, z: 85 }, { x: 139, z: -57 }, { x: -28, z: -55 }
-], "#808080", "#808080", 0.14, -999, -0.75);
+      { x: 55, z: 75 },
+      { x: 158, z: 85 },
+      { x: 139, z: -57 },
+      { x: -28, z: -55 }
+    ], "#808080", "#808080", 0.14, -999, -0.75);
 
     addState("Valkýria", [
-  { x: 1128, z: 176 }, { x: 1522, z: 598 }, { x: 1252, z: 902 }, { x: 1729, z: 759 },
-  { x: 2401, z: 1105 }, { x: 2524, z: 1209 }, { x: 2961, z: 1401 }, { x: 3461, z: 1247 },
-  { x: 3888, z: 1606 }, { x: 4197, z: 1708 }, { x: 4205, z: 2124 }, { x: 3522, z: 2452 },
-  { x: 2976, z: 2980 }, { x: 2267, z: 3576 }, { x: 236, z: 3998 }, { x: -268, z: 4215 },
-  { x: -710, z: 4488 }, { x: -1065, z: 4725 }, { x: -1423, z: 5170 }, { x: -1584, z: 5513 },
-  { x: -1921, z: 5610 }, { x: -2210, z: 5768 }, { x: -2862, z: 5710 }, { x: -3296, z: 5588 },
-  { x: -3440, z: 5195 }, { x: -3180, z: 3504 }, { x: -2290, z: 3670 }, { x: -1732, z: 4056 },
-  { x: -1382, z: 3874 }, { x: -1152, z: 3926 }, { x: -894, z: 3820 }, { x: -888, z: 3680 },
-  { x: -674, z: 3648 }, { x: -306, z: 3032 }, { x: -150, z: 2786 }, { x: -950, z: 2330 },
-  { x: -1128, z: 1828 }, { x: -1008, z: 1450 }, { x: -236, z: 836 }, { x: 328, z: 822 },
-  { x: 686, z: 644 }, { x: 516, z: 346 }
-], "#c1121f", "#c1121f", 0.12, -999, -0.75);
-    
+      { x: 1128, z: 176 }, { x: 1522, z: 598 }, { x: 1252, z: 902 }, { x: 1729, z: 759 },
+      { x: 2401, z: 1105 }, { x: 2524, z: 1209 }, { x: 2961, z: 1401 }, { x: 3461, z: 1247 },
+      { x: 3888, z: 1606 }, { x: 4197, z: 1708 }, { x: 4205, z: 2124 }, { x: 3522, z: 2452 },
+      { x: 2976, z: 2980 }, { x: 2267, z: 3576 }, { x: 236, z: 3998 }, { x: -268, z: 4215 },
+      { x: -710, z: 4488 }, { x: -1065, z: 4725 }, { x: -1423, z: 5170 }, { x: -1584, z: 5513 },
+      { x: -1921, z: 5610 }, { x: -2210, z: 5768 }, { x: -2862, z: 5710 }, { x: -3296, z: 5588 },
+      { x: -3440, z: 5195 }, { x: -3180, z: 3504 }, { x: -2290, z: 3670 }, { x: -1732, z: 4056 },
+      { x: -1382, z: 3874 }, { x: -1152, z: 3926 }, { x: -894, z: 3820 }, { x: -888, z: 3680 },
+      { x: -674, z: 3648 }, { x: -306, z: 3032 }, { x: -150, z: 2786 }, { x: -950, z: 2330 },
+      { x: -1128, z: 1828 }, { x: -1008, z: 1450 }, { x: -236, z: 836 }, { x: 328, z: 822 },
+      { x: 686, z: 644 }, { x: 516, z: 346 }
+    ], "#c1121f", "#c1121f", 0.12, -999, -0.75);
+
     addRegion("Panjam", "Valkýria", [
       { x: -1072, z: 4717 },
       { x: -1147, z: 4603 },
@@ -1074,9 +1056,8 @@ addState("Ľudovo-demokratická Republika Pracovníkov", [
     addCity("Draugen", -1474, -5936, "Dedina", "Ľudovo-demokratická republika pracovníkov", -1.5);
     addCity("Adside", -1400, -6247, "Dedina", "Ľudovo-demokratická republika pracovníkov", -1.5);
     addCity("Termale", -2069, -5115, "Lighthouse", "Ľudovo-demokratická republika pracovníkov", -1.5);
-    addCity("Beyond", -2485, -4545, "Dedina","Ľudovo-demokratická republika pracovníkov", -1.5);
-    addCity("Capuchino", -2441, -4272, "Dedina", "Berlin & Staliningrad", -1.5)
-    
+    addCity("Beyond", -2485, -4545, "Dedina", "Ľudovo-demokratická republika pracovníkov", -1.5);
+    addCity("Capuchino", -2441, -4272, "Dedina", "Berlin & Staliningrad", -1.5);
 
     addStructure("Springfield", 2312, -217, "Pillager tower", "Grankolandia", -1.5);
     addStructure("The Pillager Tower", 569, 311, "Pillager tower", "Staliningrad & Berlin", -1.5);
