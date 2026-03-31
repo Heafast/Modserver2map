@@ -1,31 +1,28 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Minecraft mapa</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minecraft server mapa</title>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
 
-<style>
-html, body {
-  margin: 0;
-  height: 100%;
-  background: #111;
-}
-
-#map {
-  width: 100%;
-  height: 100%;
-}
-
-/* ===== LABELY ===== */
-
-.state-label {
-  color: white;
+  <style>
+    .state-label {
+  color: #ffffff;
   font-size: 26px;
   font-weight: bold;
-  text-shadow: 3px 3px 0 black;
+  letter-spacing: 2px;
+  text-shadow:
+    3px 3px 0 rgba(0,0,0,0.8),
+    -1px -1px 0 rgba(0,0,0,0.8),
+    1px -1px 0 rgba(0,0,0,0.8),
+    -1px 1px 0 rgba(0,0,0,0.8);
   pointer-events: none;
 }
 
@@ -33,148 +30,1261 @@ html, body {
   color: #ffe680;
   font-size: 18px;
   font-weight: bold;
-  text-shadow: 2px 2px 0 black;
+  text-shadow:
+    2px 2px 0 rgba(0,0,0,0.8),
+    -1px -1px 0 rgba(0,0,0,0.8);
   pointer-events: none;
 }
-</style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      overflow: hidden;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+
+    .menu-toggle {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 1200;
+      width: 46px;
+      height: 46px;
+      border: none;
+      border-radius: 12px;
+      background: rgba(20, 20, 20, 0.95);
+      color: white;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-toggle:hover {
+      background: rgba(35, 35, 35, 0.98);
+    }
+
+    .panel {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 1100;
+      background: rgba(20, 20, 20, 0.95);
+      padding: 12px;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+      width: 340px;
+      max-height: calc(100vh - 24px);
+      overflow: auto;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+      transform: translateX(-380px);
+    }
+
+    .panel.open {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .panel h2 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+      padding-right: 42px;
+    }
+
+    .close-panel {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 8px;
+      background: #2a2a2a;
+      color: white;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .close-panel:hover {
+      background: #3a3a3a;
+    }
+
+    .panel label {
+      display: block;
+      margin-top: 8px;
+      font-size: 13px;
+      opacity: 0.92;
+    }
+
+    .panel input[type="number"],
+    .panel input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 4px;
+      margin-bottom: 4px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #1d1d1d;
+      color: white;
+      font-size: 14px;
+    }
+
+    .panel input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+      padding: 0;
+      accent-color: #2d6cdf;
+    }
+
+    .panel button {
+      width: 100%;
+      margin-top: 8px;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #2d6cdf;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .panel button:hover {
+      background: #245dc2;
+    }
+
+    .coords-box {
+      margin-top: 10px;
+      padding: 10px;
+      background: #1a1a1a;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .hint {
+      margin-top: 8px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .search-results {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .search-result-item {
+      padding: 10px;
+      border-radius: 8px;
+      background: #222;
+      border: 1px solid #333;
+      cursor: pointer;
+    }
+
+    .search-result-item:hover {
+      background: #2c2c2c;
+    }
+
+    .search-result-title {
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .search-result-meta {
+      margin-top: 3px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .search-empty {
+      margin-top: 8px;
+      font-size: 13px;
+      opacity: 0.75;
+    }
+
+    .section-title {
+      margin-top: 12px;
+      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      opacity: 0.85;
+    }
+
+    @media (max-width: 900px) {
+      .panel {
+        width: calc(100% - 24px);
+        transform: translateX(calc(-100% - 20px));
+      }
+    }
+
+    .pixel-marker {
+      width: 18px;
+      height: 18px;
+      position: relative;
+      image-rendering: pixelated;
+    }
+
+    .pixel-marker::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      box-sizing: border-box;
+      border: 2px solid #111;
+      box-shadow:
+        inset -2px -2px 0 rgba(0, 0, 0, 0.35),
+        inset 2px 2px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .pixel-marker::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      bottom: -6px;
+      width: 6px;
+      height: 6px;
+      background: inherit;
+      border-left: 2px solid #111;
+      border-bottom: 2px solid #111;
+      transform: rotate(-45deg);
+      box-sizing: border-box;
+    }
+
+    .marker-city { background: #c1121f; }
+    .marker-structure { background: #163a70; }
+
+    .river-label,
+    .lake-label,
+    .sea-label,
+    .canal-label,
+    .strait-label,
+    .waterfall-label,
+    .landform-label,
+    .custom-label {
+      white-space: nowrap;
+      pointer-events: none;
+      image-rendering: pixelated;
+      font-weight: bold;
+    }
+
+    .river-label {
+      color: #5ec3ff;
+      font-size: 20px;
+      font-style: italic;
+      text-shadow:
+        2px 2px 0 rgba(0, 0, 0, 0.65),
+        -1px -1px 0 rgba(0, 0, 0, 0.65),
+        1px -1px 0 rgba(0, 0, 0, 0.65),
+        -1px 1px 0 rgba(0, 0, 0, 0.65);
+    }
+
+    .lake-label {
+      color: #7fd0ff;
+      font-size: 20px;
+      text-shadow:
+        2px 2px 0 rgba(0, 0, 0, 0.65),
+        -1px -1px 0 rgba(0, 0, 0, 0.65),
+        1px -1px 0 rgba(0, 0, 0, 0.65),
+        -1px 1px 0 rgba(0, 0, 0, 0.65);
+    }
+
+    .sea-label {
+      color: #2ea8ff;
+      font-size: 28px;
+      letter-spacing: 2px;
+      text-shadow:
+        3px 3px 0 rgba(0, 0, 0, 0.7),
+        -1px -1px 0 rgba(0, 0, 0, 0.7),
+        1px -1px 0 rgba(0, 0, 0, 0.7),
+        -1px 1px 0 rgba(0, 0, 0, 0.7);
+    }
+
+    .canal-label,
+    .strait-label,
+    .waterfall-label,
+    .landform-label,
+    .custom-label {
+      text-shadow:
+        2px 2px 0 rgba(0, 0, 0, 0.65),
+        -1px -1px 0 rgba(0, 0, 0, 0.65),
+        1px -1px 0 rgba(0, 0, 0, 0.65),
+        -1px 1px 0 rgba(0, 0, 0, 0.65);
+    }
+
+    .canal-label, .strait-label { color: #8fd6ff; font-size: 18px; }
+    .waterfall-label { color: #b6e6ff; font-size: 17px; }
+    .landform-label { color: #d9d2b0; font-size: 20px; }
+    .custom-label { color: #ffe680; font-size: 18px; }
+  </style>
 </head>
-
 <body>
+  <button class="menu-toggle" id="menuToggle" title="Otvoriť menu">☰</button>
 
-<div id="map"></div>
+  <div class="panel" id="sidePanel">
+    <button class="close-panel" id="closeLeftPanel" title="Zavrieť">×</button>
+    <h2>Server mapa</h2>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <div class="section-title">Vyhľadávanie</div>
+    <label for="searchInput">Názov mesta / štruktúry / štátu / regiónu / vody</label>
+    <input id="searchInput" type="text" placeholder="napr. Valkýria, Panjam, Norfolk..." autocomplete="off" />
+    <div id="searchResults" class="search-results"></div>
 
-<script>
-// ===== NASTAVENIA =====
-const SIZE = 14000;
-const MIN = -7000;
-const MAX = 7000;
+    <div class="section-title">Súradnice</div>
+    <label for="coordX">Minecraft X</label>
+    <input id="coordX" type="number" placeholder="napr. 1200" />
 
-// ===== MAPA =====
-const map = L.map("map", {
-  crs: L.CRS.Simple,
-  minZoom: -4,
-  maxZoom: 2
-});
+    <label for="coordZ">Minecraft Z</label>
+    <input id="coordZ" type="number" placeholder="napr. -3400" />
 
-const bounds = [[0,0],[SIZE,SIZE]];
-L.imageOverlay("mapa.jpg", bounds).addTo(map);
-map.fitBounds(bounds);
+    <button id="goToCoords">Prejsť na súradnice</button>
+    <button id="resetView">Reset pohľadu</button>
 
-// ===== LAYERS =====
-const statesLayer = L.layerGroup().addTo(map);
-const regionsLayer = L.layerGroup().addTo(map);
+    <div class="coords-box" id="clickedCoords">
+      Klikni na mapu a ukážu sa MC súradnice.
+    </div>
 
-// ===== PREVOD =====
-function mcToPixel(x,z){
-  return [MAX - z, x - MIN];
-}
+    <div class="coords-box">
+      <strong>Filtre</strong><br>
 
-// ===== STRED POLYGÓNU =====
-function getCenter(points){
-  let x=0,z=0;
-  points.forEach(p=>{
-    x+=p.x;
-    z+=p.z;
-  });
-  return {x:x/points.length, z:z/points.length};
-}
+      <label style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+        <input type="checkbox" id="toggleCities" checked />
+        Mestá
+      </label>
 
-// ===== LABEL =====
-function createLabel(layer, text, x, z, className){
-  const label = L.marker(mcToPixel(x,z),{
-    icon: L.divIcon({
-      className:"",
-      html:`<div class="${className}">${text}</div>`
-    }),
-    interactive:false
-  });
-  layer.addLayer(label);
-}
+      <label style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+        <input type="checkbox" id="toggleStructures" checked />
+        Štruktúry
+      </label>
 
-// ===== STATE =====
-function addState(name, points, color){
+      <label style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+        <input type="checkbox" id="toggleWater" checked />
+        Voda
+      </label>
 
-  const polygon = L.polygon(
-    points.map(p=>mcToPixel(p.x,p.z)),
-    {
-      color:"#808080",
-      weight:4,
-      fillColor:color,
-      fillOpacity:0.25
+      <label style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+        <input type="checkbox" id="toggleStates" checked />
+        Štáty
+      </label>
+
+      <label style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+        <input type="checkbox" id="toggleRegions" checked />
+        Regióny
+      </label>
+
+      <label style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+        <input type="checkbox" id="toggleLandforms" checked />
+        Prírodné oblasti
+      </label>
+    </div>
+
+    <div class="hint">
+      Mapa je nastavená na rozsah X/Z od -7000 do +7000.
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <script>
+    const imageWidth = 14000;
+    const imageHeight = 14000;
+
+    const mcMinX = -7000;
+    const mcMaxX = 7000;
+    const mcMinZ = -7000;
+    const mcMaxZ = 7000;
+
+    const bounds = [[0, 0], [imageHeight, imageWidth]];
+
+    const map = L.map("map", {
+      crs: L.CRS.Simple,
+      minZoom: -4,
+      maxZoom: 2,
+      zoomSnap: 0.25,
+      zoomDelta: 0.25,
+      maxBounds: bounds,
+      maxBoundsViscosity: 1.0
+    });
+
+    L.imageOverlay("mapa.jpg", bounds).addTo(map);
+    map.fitBounds(bounds);
+
+    let searchMarker = null;
+
+    function mcToPixel(x, z) {
+      const px = x - mcMinX;
+      const py = mcMaxZ - z;
+      return [py, px];
     }
-  ).addTo(statesLayer);
-
-  const center = getCenter(points);
-
-  createLabel(statesLayer, name, center.x, center.z, "state-label");
+function getPolygonCenter(points) {
+  let x = 0, z = 0;
+  points.forEach(p => {
+    x += p.x;
+    z += p.z;
+  });
+  return {
+    x: x / points.length,
+    z: z / points.length
+  };
 }
-
-// ===== REGION =====
-function addRegion(name, points){
-
-  const polygon = L.polygon(
-    points.map(p=>mcToPixel(p.x,p.z)),
-    {
-      color:"#ff6b6b",
-      weight:2,
-      fillOpacity:0
+    function pixelToMc(py, px) {
+      const x = Math.round(px + mcMinX);
+      const z = Math.round(mcMaxZ - py);
+      return { x, z };
     }
-  ).addTo(regionsLayer);
 
-  const center = getCenter(points);
+    function normalizeText(text) {
+      return (text || "")
+        .toString()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+    }
 
-  createLabel(regionsLayer, name, center.x, center.z, "region-label");
+    const sidePanel = document.getElementById("sidePanel");
+    const menuToggle = document.getElementById("menuToggle");
+
+    function togglePanel(panel) {
+      panel.classList.toggle("open");
+    }
+
+    menuToggle.addEventListener("click", () => togglePanel(sidePanel));
+    document.getElementById("closeLeftPanel").addEventListener("click", () => sidePanel.classList.remove("open"));
+
+    const cityIcon = L.divIcon({
+      className: "",
+      html: `<div class="pixel-marker marker-city"></div>`,
+      iconSize: [18, 24],
+      iconAnchor: [9, 24],
+      popupAnchor: [0, -20]
+    });
+
+    const structureIcon = L.divIcon({
+      className: "",
+      html: `<div class="pixel-marker marker-structure"></div>`,
+      iconSize: [18, 24],
+      iconAnchor: [9, 24],
+      popupAnchor: [0, -20]
+    });
+
+    const citiesLayer = L.layerGroup().addTo(map);
+    const structuresLayer = L.layerGroup().addTo(map);
+    const waterLayer = L.layerGroup().addTo(map);
+    const statesLayer = L.layerGroup().addTo(map);
+    const regionsLayer = L.layerGroup().addTo(map);
+    const landformsLayer = L.layerGroup().addTo(map);
+
+    const allVisibilityUpdaters = [];
+    const searchableItems = [];
+
+    function registerUpdater(fn) {
+      allVisibilityUpdaters.push(fn);
+      fn();
+    }
+
+    function isChecked(id) {
+      return document.getElementById(id).checked;
+    }
+
+    function refreshVisibility() {
+      allVisibilityUpdaters.forEach(fn => fn());
+    }
+
+    function addToSearchIndex(item) {
+      searchableItems.push(item);
+    }
+
+    function flyToMcCoords(x, z, zoom = 0, popupHtml = null) {
+      const [py, px] = mcToPixel(x, z);
+      map.setView([py, px], zoom);
+
+      if (searchMarker) {
+        map.removeLayer(searchMarker);
+      }
+
+      searchMarker = L.marker([py, px]).addTo(map);
+      if (popupHtml) {
+        searchMarker.bindPopup(popupHtml).openPopup();
+      }
+
+      document.getElementById("clickedCoords").innerHTML =
+        `<strong>Zvolený bod:</strong><br>X: ${x}<br>Z: ${z}`;
+    }
+
+    function ensureVisibleForSearch(item) {
+      const toggleMap = {
+        city: "toggleCities",
+        structure: "toggleStructures",
+        water: "toggleWater",
+        state: "toggleStates",
+        region: "toggleRegions",
+        landform: "toggleLandforms",
+        customLabel: "toggleLandforms"
+      };
+
+      const toggleId = toggleMap[item.kind];
+      if (toggleId && document.getElementById(toggleId)) {
+        document.getElementById(toggleId).checked = true;
+      }
+      refreshVisibility();
+    }
+
+    function getSearchLabel(item) {
+      const extra = [];
+      if (item.subtype) extra.push(item.subtype);
+      if (item.state) extra.push(item.state);
+      return extra.join(" • ");
+    }
+
+    function renderSearchResults(items) {
+      const box = document.getElementById("searchResults");
+      box.innerHTML = "";
+
+      if (!items.length) {
+        const div = document.createElement("div");
+        div.className = "search-empty";
+        div.textContent = "Nič sa nenašlo.";
+        box.appendChild(div);
+        return;
+      }
+
+      items.slice(0, 12).forEach(item => {
+        const el = document.createElement("div");
+        el.className = "search-result-item";
+        el.innerHTML = `
+          <div class="search-result-title">${item.name}</div>
+          <div class="search-result-meta">${item.kindLabel}${getSearchLabel(item) ? " • " + getSearchLabel(item) : ""}</div>
+        `;
+
+        el.addEventListener("click", () => {
+          ensureVisibleForSearch(item);
+          flyToMcCoords(
+            item.centerX,
+            item.centerZ,
+            item.zoom ?? 0,
+            `<b>${item.name}</b><br>${item.kindLabel}${item.subtype ? `<br>Typ: ${item.subtype}` : ""}${item.state ? `<br>Štát: ${item.state}` : ""}<br>Súradnice: X ${item.centerX}, Z ${item.centerZ}`
+          );
+          sidePanel.classList.add("open");
+        });
+
+        box.appendChild(el);
+      });
+    }
+
+    function searchItems(query) {
+      const q = normalizeText(query.trim());
+      if (!q) {
+        document.getElementById("searchResults").innerHTML = "";
+        return;
+      }
+
+      const results = searchableItems
+        .filter(item => {
+          return [item.name, item.kindLabel, item.subtype, item.state]
+            .filter(Boolean)
+            .some(value => normalizeText(value).includes(q));
+        })
+        .sort((a, b) => {
+          const aStarts = normalizeText(a.name).startsWith(q) ? 1 : 0;
+          const bStarts = normalizeText(b.name).startsWith(q) ? 1 : 0;
+          return bStarts - aStarts || a.name.localeCompare(b.name, "sk");
+        });
+
+      renderSearchResults(results);
+    }
+
+    function createTextLabel(layer, toggleId, x, z, html, iconWidth, iconHeight, minZoom = -999, maxZoom = 999) {
+      const label = L.marker(mcToPixel(x, z), {
+        icon: L.divIcon({
+          className: "",
+          html,
+          iconSize: [iconWidth, iconHeight],
+          iconAnchor: [iconWidth / 2, iconHeight / 2]
+        }),
+        interactive: false
+      });
+
+      registerUpdater(() => {
+        const zoom = map.getZoom();
+        if (isChecked(toggleId) && zoom >= minZoom && zoom <= maxZoom) {
+          if (!layer.hasLayer(label)) layer.addLayer(label);
+        } else {
+          if (layer.hasLayer(label)) layer.removeLayer(label);
+        }
+      });
+
+      return label;
+    }
+
+    function addCity(name, x, z, type, state, minZoom = -999) {
+      const marker = L.marker(mcToPixel(x, z), { icon: cityIcon })
+        .bindPopup(`
+          <b>${name}</b><br>
+          Typ: ${type}<br>
+          Štát: ${state}<br>
+          Súradnice: X ${x}, Z ${z}
+        `);
+
+      registerUpdater(() => {
+        if (isChecked("toggleCities") && map.getZoom() >= minZoom) {
+          if (!citiesLayer.hasLayer(marker)) citiesLayer.addLayer(marker);
+        } else {
+          if (citiesLayer.hasLayer(marker)) citiesLayer.removeLayer(marker);
+        }
+      });
+
+      addToSearchIndex({
+        kind: "city",
+        kindLabel: "Mesto",
+        name,
+        subtype: type,
+        state,
+        centerX: x,
+        centerZ: z,
+        minZoom,
+        maxZoom: 999,
+        zoom: Math.max(minZoom, 0)
+      });
+
+      return marker;
+    }
+
+    function addStructure(name, x, z, type, state, minZoom = -1.5) {
+      const marker = L.marker(mcToPixel(x, z), { icon: structureIcon })
+        .bindPopup(`
+          <b>${name}</b><br>
+          Typ: ${type}<br>
+          Štát: ${state}<br>
+          Súradnice: X ${x}, Z ${z}
+        `);
+
+      registerUpdater(() => {
+        if (isChecked("toggleStructures") && map.getZoom() >= minZoom) {
+          if (!structuresLayer.hasLayer(marker)) structuresLayer.addLayer(marker);
+        } else {
+          if (structuresLayer.hasLayer(marker)) structuresLayer.removeLayer(marker);
+        }
+      });
+
+      addToSearchIndex({
+        kind: "structure",
+        kindLabel: "Štruktúra",
+        name,
+        subtype: type,
+        state,
+        centerX: x,
+        centerZ: z,
+        minZoom,
+        maxZoom: 999,
+        zoom: Math.max(minZoom, 0)
+      });
+
+      return marker;
+    }
+
+ function addWater(name, type, x, z, className, iconWidth, iconHeight, minZoom = -999, maxZoom = 999) {
+  createTextLabel(
+    waterLayer,
+    "toggleWater",
+    x,
+    z,
+    `<div class="${className}">${name}</div>`,
+    iconWidth,
+    iconHeight,
+    minZoom,
+    maxZoom
+  );
+
+  addToSearchIndex({
+    kind: "water",
+    kindLabel: "Voda",
+    name,
+    subtype: type,
+    centerX: x,
+    centerZ: z,
+    minZoom,
+    maxZoom,
+    zoom: Math.max(minZoom, 0)
+  });
 }
 
-// ===== DATA =====
+function addState(
+  name,
+  points,
+  borderColor = "#808080",
+  fillColor = borderColor,
+  fillOpacity = 0.25,
+  minZoom = -999,
+  fillMaxZoom = -1.5
+) {
+  const polygon = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
+    color: borderColor,
+    weight: 6,
+    fillColor: fillColor,
+    fillOpacity: 0
+  });
 
-// ŠTÁTY
-addState("Valkýria", [
-  { x: 1128, z: 176 },
-  { x: 2401, z: 1105 },
-  { x: 236, z: 3998 },
-  { x: -1423, z: 5170 },
-  { x: -3923, z: 4009 },
-  { x: -674, z: 3648 },
-  { x: -236, z: 836 },
-  { x: 516, z: 346 }
-], "#c1121f");
+  polygon.on("click", function (e) {
+    const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
+
+    document.getElementById("clickedCoords").innerHTML =
+      `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
+
+    if (searchMarker) {
+      map.removeLayer(searchMarker);
+    }
+
+    searchMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
+      .bindPopup(`
+        <b>${name}</b><br>
+        Typ: štát<br><br>
+        X: ${mc.x}<br>
+        Z: ${mc.z}
+      `)
+      .openPopup();
+  });
+
+  registerUpdater(() => {
+    const zoom = map.getZoom();
+    const show = isChecked("toggleStates") && zoom >= minZoom;
+
+    if (show) {
+      if (!statesLayer.hasLayer(polygon)) statesLayer.addLayer(polygon);
+
+      polygon.setStyle({
+        color: borderColor,
+        fillColor: fillColor,
+        fillOpacity: zoom <= fillMaxZoom ? fillOpacity : 0
+      });
+    } else {
+      if (statesLayer.hasLayer(polygon)) statesLayer.removeLayer(polygon);
+    }
+  });
+
+  const center = getPolygonCenter(points);
+
+  createTextLabel(
+    statesLayer,
+    "toggleStates",
+    center.x,
+    center.z,
+    `<div class="state-label">${name}</div>`,
+    260,
+    30,
+    -4,
+    -1.2
+  );
+
+  addToSearchIndex({
+    kind: "state",
+    kindLabel: "Štát",
+    name,
+    centerX: center.x,
+    centerZ: center.z,
+    minZoom,
+    maxZoom: 999,
+    zoom: -1
+  });
+
+  return polygon;
+}
+
+function addRegion(
+  name,
+  state,
+  points,
+  borderColor = "#ff6b6b",
+  minZoom = -1.5
+) {
+  const polygon = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
+    color: borderColor,
+    weight: 3,
+    fillOpacity: 0
+  });
+
+  polygon.on("click", function (e) {
+    const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
+
+    document.getElementById("clickedCoords").innerHTML =
+      `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
+
+    if (searchMarker) {
+      map.removeLayer(searchMarker);
+    }
+
+    searchMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
+      .bindPopup(`
+        <b>${name}</b><br>
+        Typ: región<br>
+        Štát: ${state}<br><br>
+        X: ${mc.x}<br>
+        Z: ${mc.z}
+      `)
+      .openPopup();
+  });
+
+  registerUpdater(() => {
+    if (isChecked("toggleRegions") && map.getZoom() >= minZoom) {
+      if (!regionsLayer.hasLayer(polygon)) regionsLayer.addLayer(polygon);
+    } else {
+      if (regionsLayer.hasLayer(polygon)) regionsLayer.removeLayer(polygon);
+    }
+  });
+
+  const center = getPolygonCenter(points);
+
+  createTextLabel(
+    regionsLayer,
+    "toggleRegions",
+    center.x,
+    center.z,
+    `<div class="region-label">${name}</div>`,
+    200,
+    24,
+    -2,
+    0
+  );
+
+  addToSearchIndex({
+    kind: "region",
+    kindLabel: "Región",
+    name,
+    state,
+    centerX: center.x,
+    centerZ: center.z,
+    minZoom,
+    maxZoom: 999,
+    zoom: 0
+  });
+
+  return polygon;
+}
+    function addLandmarkArea(name, type, x, z, minZoom = -2, maxZoom = 0, className = "landform-label", width = 220, height = 28) {
+      createTextLabel(
+        landformsLayer,
+        "toggleLandforms",
+        x,
+        z,
+        `<div class="${className}">${name}</div>`,
+        width,
+        height,
+        minZoom,
+        maxZoom
+      );
+
+      addToSearchIndex({
+        kind: "landform",
+        kindLabel: "Prírodná oblasť",
+        name,
+        subtype: type,
+        centerX: x,
+        centerZ: z,
+        minZoom,
+        maxZoom,
+        zoom: 0
+      });
+    }
+
+    function addCustomLabel(name, x, z, className = "custom-label", width = 220, height = 28, minZoom = -999, maxZoom = 999) {
+      createTextLabel(
+        landformsLayer,
+        "toggleLandforms",
+        x,
+        z,
+        `<div class="${className}">${name}</div>`,
+        width,
+        height,
+        minZoom,
+        maxZoom
+      );
+
+      addToSearchIndex({
+        kind: "customLabel",
+        kindLabel: "Vlastný názov",
+        name,
+        centerX: x,
+        centerZ: z,
+        minZoom,
+        maxZoom,
+        zoom: 0
+      });
+    }
+
+    map.on("click", function (e) {
+      const py = e.latlng.lat;
+      const px = e.latlng.lng;
+      const mc = pixelToMc(py, px);
+
+      document.getElementById("clickedCoords").innerHTML =
+        `<strong>Posledný klik:</strong><br>X: ${mc.x}<br>Z: ${mc.z}`;
+
+      if (searchMarker) {
+        map.removeLayer(searchMarker);
+      }
+
+      searchMarker = L.marker([py, px]).addTo(map)
+        .bindPopup(`X: ${mc.x}<br>Z: ${mc.z}`)
+        .openPopup();
+    });
+
+    document.getElementById("goToCoords").addEventListener("click", function () {
+      const x = parseInt(document.getElementById("coordX").value, 10);
+      const z = parseInt(document.getElementById("coordZ").value, 10);
+
+      if (isNaN(x) || isNaN(z)) {
+        alert("Zadaj platné X a Z súradnice.");
+        return;
+      }
+
+      if (x < mcMinX || x > mcMaxX || z < mcMinZ || z > mcMaxZ) {
+        alert("Tieto súradnice sú mimo mapy (-7000 až +7000).");
+        return;
+      }
+
+      flyToMcCoords(x, z, 0, `X: ${x}<br>Z: ${z}`);
+
+      document.getElementById("clickedCoords").innerHTML =
+        `<strong>Nájdené súradnice:</strong><br>X: ${x}<br>Z: ${z}`;
+    });
+
+    document.getElementById("resetView").addEventListener("click", function () {
+      map.fitBounds(bounds);
+    });
+
+    document.getElementById("searchInput").addEventListener("input", function (e) {
+      searchItems(e.target.value);
+    });
+
+    document.getElementById("toggleCities").addEventListener("change", refreshVisibility);
+    document.getElementById("toggleStructures").addEventListener("change", refreshVisibility);
+    document.getElementById("toggleWater").addEventListener("change", refreshVisibility);
+    document.getElementById("toggleStates").addEventListener("change", refreshVisibility);
+    document.getElementById("toggleRegions").addEventListener("change", refreshVisibility);
+    document.getElementById("toggleLandforms").addEventListener("change", refreshVisibility);
+
+    map.on("zoomend", refreshVisibility);
+
+    // ===== DÁTA =====
+
+addState("Ľudovo-demokratická Republika Pracovníkov", [
+  { x: -1576, z: -7000 },
+  { x: -1304, z: -6228 },
+  { x: -1389, z: -5706 },
+  { x: -2452, z: -4470 },
+  { x: -2883, z: -4089 },
+  { x: -2440, z: -3708 },
+  { x: -1566, z: -3570 },
+  { x: -1304, z: -2904 },
+  { x: -1063, z: -1226 },
+  { x: -1047, z: -575 },
+  { x: -612, z: -99 },
+  { x: -25, z: -56 },
+  { x: -67, z: 74 },
+  { x: 119, z: 292 },
+  { x: 516, z: 345 },
+  { x: 686, z: 642 },
+  { x: 329, z: 823 },
+  { x: -236, z: 835 },
+  { x: -1668, z: 516 },
+  { x: -1876, z: 770 },
+  { x: -2008, z: 1013 },
+  { x: -2175, z: 976 },
+  { x: -2260, z: 1229 },
+  { x: -2559, z: 1674 },
+  { x: -2901, z: 2084 },
+  { x: -3311, z: 2510 },
+  { x: -3608, z: 2714 },
+  { x: -4576, z: 2679 },
+  { x: -5959, z: 1960 },
+  { x: -7000, z: 1402 },
+  { x: -7000, z: -7000 }
+], "#808080", "#2f9e44", 0.35, -999, -1.5);
 
 addState("Grankolandia", [
   { x: 6830, z: 32 },
   { x: 5483, z: 2072 },
+  { x: 4207, z: 2125 },
+  { x: 4199, z: 1700 },
+  { x: 3889, z: 1607 },
+  { x: 3460, z: 1247 },
+  { x: 2960, z: 1400 },
+  { x: 2521, z: 1209 },
+  { x: 2402, z: 1106 },
+  { x: 1728, z: 761 },
+  { x: 1254, z: 901 },
+  { x: 1522, z: 597 },
+  { x: 1129, z: 175 },
+  { x: 1533, z: -63 },
+  { x: 2248, z: -623 },
+  { x: 2180, z: -1839 },
+  { x: 2299, z: -2768 },
+  { x: 2061, z: -3133 },
+  { x: 1936, z: -3834 },
+  { x: 2130, z: -4102 },
+  { x: 2064, z: -4631 },
+  { x: 2103, z: -4919 },
+  { x: 2299, z: -5539 },
+  { x: 2174, z: -5703 },
+  { x: 2066, z: -6013 },
+  { x: 2088, z: -6212 },
+  { x: 2301, z: -6528 },
   { x: 2300, z: -7000 },
   { x: 7000, z: -7000 },
   { x: 7000, z: -230 }
-], "#d9b300");
+], "#808080", "#d9b300", 0.35, -999, -1.5);
 
 addState("Berlin & Staliningrad", [
   { x: 2300, z: -7000 },
+  { x: 2301, z: -6528 },
+  { x: 2088, z: -6212 },
+  { x: 2066, z: -6013 },
+  { x: 2174, z: -5703 },
+  { x: 2299, z: -5539 },
+  { x: 2103, z: -4919 },
+  { x: 2064, z: -4631 },
+  { x: 2130, z: -4102 },
+  { x: 1936, z: -3834 },
+  { x: 2061, z: -3133 },
   { x: 2299, z: -2768 },
+  { x: 2178, z: -1841 },
+  { x: 2248, z: -623 },
   { x: 1533, z: -63 },
+  { x: 1128, z: 176 },
+  { x: 515, z: 346 },
+  { x: 117, z: 288 },
+  { x: -67, z: 74 },
+  { x: 158, z: 85 },
+  { x: 139, z: -57 },
+  { x: -27, z: -55 },
+  { x: -608, z: -94 },
   { x: -1047, z: -574 },
+  { x: -1061, z: -1226 },
+  { x: -1303, z: -2904 },
+  { x: -1566, z: -3571 },
+  { x: -2441, z: -3712 },
+  { x: -2883, z: -4088 },
+  { x: -2452, z: -4473 },
+  { x: -2023, z: -4967 },
+  { x: -1389, z: -5707 },
+  { x: -1303, z: -6227 },
   { x: -1566, z: -7000 }
-], "#33c7c7");
+], "#808080", "#33c7c7", 0.35, -999, -1.5);
 
-// REGIÓNY
-addRegion("Panjam", [
-  { x: -1072, z: 4717 },
-  { x: -1292, z: 4561 },
-  { x: -1740, z: 4059 },
-  { x: -895, z: 3832 },
-  { x: -271, z: 4207 }
-]);
+addState("Spawn", [
+  { x: -67, z: 74 },
+  { x: 158, z: 85 },
+  { x: 139, z: -57 },
+  { x: -28, z: -55 }
+], "#808080", "#808080", 0.35, -999, -1.5);
 
-addRegion("Nóra Valley", [
-  { x: -671, z: 3652 },
-  { x: -176, z: 3153 },
-  { x: 32, z: 3780 },
-  { x: 241, z: 3998 }
-]);
+addState("Norddeutschland", [
+  { x: -7000, z: 1403 },
+  { x: -4575, z: 2682 },
+  { x: -3607, z: 2715 },
+  { x: -3310, z: 2511 },
+  { x: -2550, z: 1673 },
+  { x: -2257, z: 1232 },
+  { x: -2172, z: 976 },
+  { x: -2008, z: 1013 },
+  { x: -1874, z: 772 },
+  { x: -1667, z: 517 },
+  { x: -241, z: 835 },
+  { x: -1008, z: 1451 },
+  { x: -1129, z: 1829 },
+  { x: -954, z: 2327 },
+  { x: -150, z: 2786 },
+  { x: -673, z: 3649 },
+  { x: -886, z: 3683 },
+  { x: -893, z: 3819 },
+  { x: -1153, z: 3924 },
+  { x: -1380, z: 3875 },
+  { x: -1732, z: 4056 },
+  { x: -2294, z: 3669 },
+  { x: -3179, z: 3503 },
+  { x: -3175, z: 3031 },
+  { x: -3364, z: 3010 },
+  { x: -3832, z: 3390 },
+  { x: -4029, z: 3809 },
+  { x: -3923, z: 4008 },
+  { x: -3521, z: 4277 },
+  { x: -3402, z: 4957 },
+  { x: -3439, z: 5197 },
+  { x: -3296, z: 5591 },
+  { x: -2863, z: 5717 },
+  { x: -2215, z: 5771 },
+  { x: -1921, z: 5612 },
+  { x: -1582, z: 5520 },
+  { x: -1423, z: 5171 },
+  { x: -1063, z: 4731 },
+  { x: -268, z: 4218 },
+  { x: 238, z: 3999 },
+  { x: 2271, z: 3578 },
+  { x: 3526, z: 2449 },
+  { x: 4208, z: 2127 },
+  { x: 5486, z: 2075 },
+  { x: 7000, z: -231 },
+  { x: 7000, z: 7000 },
+  { x: -7000, z: 7000 }
+], "#808080", "#00008B", 0.35, -999, -1.5);
 
-</script>
+addState("Valkýria", [
+  { x: 1128, z: 176 }, { x: 1522, z: 598 }, { x: 1252, z: 902 }, { x: 1729, z: 759 },
+  { x: 2401, z: 1105 }, { x: 2524, z: 1209 }, { x: 2961, z: 1401 }, { x: 3461, z: 1247 },
+  { x: 3888, z: 1606 }, { x: 4197, z: 1708 }, { x: 4205, z: 2124 }, { x: 3522, z: 2452 },
+  { x: 2976, z: 2980 }, { x: 2267, z: 3576 }, { x: 236, z: 3998 }, { x: -268, z: 4215 },
+  { x: -710, z: 4488 }, { x: -1065, z: 4725 }, { x: -1423, z: 5170 }, { x: -1584, z: 5513 },
+  { x: -1921, z: 5610 }, { x: -2210, z: 5768 }, { x: -2862, z: 5710 }, { x: -3296, z: 5588 },
+  { x: -3440, z: 5195 }, { x: -3404, z: 4959 }, { x: -3520, z: 4277 }, { x: -3923, z: 4009 },
+  { x: -4029, z: 3811 }, { x: -3832, z: 3391 }, { x: -3366, z: 3009 }, { x: -3175, z: 3031 },
+  { x: -3180, z: 3504 }, { x: -2290, z: 3670 }, { x: -1732, z: 4056 },
+  { x: -1382, z: 3874 }, { x: -1152, z: 3926 }, { x: -894, z: 3820 }, { x: -888, z: 3680 },
+  { x: -674, z: 3648 }, { x: -306, z: 3032 }, { x: -150, z: 2786 }, { x: -950, z: 2330 },
+  { x: -1128, z: 1828 }, { x: -1008, z: 1450 }, { x: -236, z: 836 }, { x: 328, z: 822 },
+  { x: 686, z: 644 }, { x: 516, z: 346 }
+], "#808080", "#c1121f", 0.35, -999,-1.5);
 
+    addRegion("Panjam", "Valkýria", [
+      { x: -1072, z: 4717 },
+      { x: -1147, z: 4603 },
+      { x: -1292, z: 4561 },
+      { x: -1740, z: 4059 },
+      { x: -1381, z: 3882 },
+      { x: -1159, z: 3924 },
+      { x: -895, z: 3832 },
+      { x: -888, z: 3684 },
+      { x: -667, z: 3655 },
+      { x: -271, z: 4207 }
+    ], "#ff6b6b", -1.5);
+    
+    addRegion("Nóra Valley", "Valkýria", [
+       { x: -671, z: 3652 },
+       { x: -306, z: 3040 },
+       { x: -176, z: 3153 },
+       { x: -269, z: 3330 },
+       { x: -115, z: 3521 },
+       { x: 32, z: 3780 },
+       { x: 321, z: 3980 },
+       { x: 241, z: 3998 },
+       { x: -270, z: 4208 }
+      ], "#ff6b6b", -1.5);
+
+    addCity("Norfolk", 600, 850, "Továrenské mesto", "Valkýria");
+    addCity("Spawn mesto", 250, -275, "Spawn", "Staliningrad & Berlin");
+    addCity("Nóra", -375, 3770, "Hlavné mesto", "Valkýria");
+    addCity("Dračí vrch", 865, -344, "Chata", "Staliningrad & Berlin", -1);
+    addCity("Uhlinovce", 839, 725, "Dedina", "Valkýria", -1.5);
+    addCity("Veľká Pláň", 1180, 786, "Dedina", "Valkýria", -1.5);
+    addCity("Cherry", 365, 1280, "Dedina", "Valkýria", -1.5);
+    addCity("York", 3268, 2356, "Dedina", "Valkýria", -1.5);
+    addCity("Budeto", 905, 2816, "Dedina", "Valkýria", -1.5);
+    addCity("Amsterdam", 1340, 3269, "Prístav", "Valkýria", -1.5);
+    addCity("Rotterdam", 1261, 3025, "Prístav", "Valkýria", -1.5);
+    addCity("Ardeny", 255, 2319, "Dedina", "Valkýria", -1.5);
+    addCity("Sĺňava", 2479, 1708, "Prístav", "Valkýria", -1.5);
+    addCity("Panama", 2754, 1719, "Dedina", "Valkýria", -1.5);
+    addCity("Florida", 3651, 1721, "Prístav", "Valkýria", -1.5);
+    addCity("Ninkagrad", -3128, -2433, "Hlavné mesto", "Ľudovo-demokratická republika pracovníkov");
+    addCity("Riverhymn", -1226, -6122, "Prístav", "Berlin & Staliningrad", -1.5);
+    addCity("Duncan", -1462, -5800, "Prístav", "Ľudovo-demokratická republika pracovníkov", -1.5);
+    addCity("Draugen", -1474, -5936, "Dedina", "Ľudovo-demokratická republika pracovníkov", -1.5);
+    addCity("Adside", -1400, -6247, "Dedina", "Ľudovo-demokratická republika pracovníkov", -1.5);
+    addCity("Termale", -2069, -5115, "Lighthouse", "Ľudovo-demokratická republika pracovníkov", -1.5);
+    addCity("Beyond", -2485, -4545, "Dedina", "Ľudovo-demokratická republika pracovníkov", -1.5);
+    addCity("Capuchino", -2441, -4272, "Dedina", "Berlin & Staliningrad", -1.5);
+    addCity("Canberra", 788, 2360, "Dedina", "Valkýria", -1.5);
+    addCity("Sydney", 1248, 2446, "Prístav", "Valkýria", -1.5);
+    addCity("Mississippi", 664, 2977, "Prístav", "Valkýria", -1.5);
+    addCity("Radstadt", 278, 3242, "Dedina", "Valkýria", -1.5);
+    addCity("Riverside", 794, 3563, "Dedina", "Valkýria", -1.5);
+    addCity("Nuuk", 1786, 3414, "Prístav", "Valkýria", -1.5);
+    addCity("Central Lands", 3006, 2330, "Ťažebné mesto", "Valkýria", -1.5);
+    addCity("York", 3269, 2356, "Dedina", "Valkýria", -1.5);
+    addCity("Tennessee", 2551, 3272, "Flotila", "Valkýria", -1.5);
+    addCity("Nóra Village", -241, 3533, "Dedina", "Valkýria", -1.5);
+    addCity("Horizon", -449, 3928, "Dedina", "Valkýria", -1.5);
+    addCity("Flame Fragment", -1047, 4506, "Továrenské mesto", "Valkýria", -1.5);
+    addCity("Potato", -1373, 4045, "Dedina", "Valkýria", -1.5);
+    addCity("Syntria", -1188, 4664, "Dedina", "Valkýria", -1.5);
+    addCity("Riga", -3248, 5547, "Prístav", "Valkýria", -1.5);
+    addCity("Undersky", -2058, 4602, "Chata", "Valkýria", -1.5);
+    addCity("Springfield", 3061, -157, "Hlavné mesto", "Grankolandia");
+    addCity("Newfoundland", 6440, -4541, "Lighthouse", "Grankolandia", -1.5);
+    addCity("Crosier", 3621, -2627, "Dedina", "Grankolandia", -1.5)
+    addCity("Malá Grankolandia", 3527, -1263, "Dedina", "Grankolandia", -1.5);
+    addCity("Safe Haven", 2887, -983, "Dedina", "Grankolandia", -1.5);
+    addCity("Cliffside", 3369, -486, "Chata", "Grankolandia", -1.5);
+    addCity("Erlenberg", 3126, -456, "Veža", "Grankolandia", -1.5);
+    addCity("Breeze", 3891, -634, "Pistav", "Grankolandia", -1.5);
+    addCity("Chernobyl", 4958, 845, "Mushroom Village", "Grankolandia", -1.5);
+    addCity("Fighters", 4824, 40, "Flotila", "Grankolandia", -1.5);
+    addCity("Guardians", 4889, -520, "Flotila", "Grankolandia", -1.5);
+    addCity("Needle", 6887, 40, "Flotila", "Norddeutschland", -1.5);
+    addCity("Tokyo", -1255, 3352, "Dedina", "Norddeutschland", -1.5);
+    addCity("Frostdorf", -3498, 4010, "Chata", "Valkýria", -1.5);
+
+    addStructure("Springfield", 2312, -217, "Pillager tower", "Grankolandia", -1.5);
+    addStructure("The Pillager Tower", 569, 311, "Pillager tower", "Staliningrad & Berlin", -1.5);
+    addStructure("Atlantis", 5649, -2798, "Better ocean monument", "Grankolandia", -1.5);
+    addStructure("Dunlock", -1669, -5591, "Boss", "Ľudovo-demokratická republika pracovníkov", -1.5);
+    addStructure("Oversol", -2218, -4884, "Boss", "Ľudovo-demokratická republika pracovníkov", -1.5);
+    addStructure("Hubble", -5698, 939, "Megastructure", "Ľudovo-demokratická republika pracovníkov", -2.5);
+    addStructure("Skyfall", -2116, 4644, "Cloud Temple", "Valkýria", -1.5);
+    addStructure("Skyside", -3068, 4606, "Cloud Temple", "Valkýria", -1.5);
+    addStructure("Igris Temple", -1924, 4476, "Underground Chamber", "Valkýria", -1.5);
+    addStructure("Sunrise", -3123, 5111, "Underground Chamber", "Valkýria", -1.5);
+    addStructure("Skyreach", -1839, 5141, "Underground Chamber", "Valkýria", -1.5);
+    addStructure("The Underground", -1245, 4569, "Underground Chamber", "Valkýria", -1.5);
+    addStructure("Heavem", -2184, 4765, "Pillager church", "Valkýria", -1.5);
+    addStructure("Watcher", -201, 3831, "Pillager tower", "Staliningrad & Berlin", -1.5);
+    addStructure("Astelix", 4713, 791, "Mushroom Tower", "Grankolandia", -1.5);
+    addStructure("Ales", 5244, 1967, "Better ocean monument", "Grankolandia", -1.5);
+    addStructure("Daes", 5634, 2020, "Better ocean monument", "Norddeutschland", -1.5);
+    addStructure("Iceman", 5794, 22047, "Pillager ship", "Norddeutschland", -1.5);
+    addStructure("Jacques", 6480, 384, "Better ocean monument", "Grankolandia", -1.5);
+    addStructure("Atlantída 2", 6685, -524, "Better ocean monument", "Grankolandia", -1.5);
+    addStructure("Black Pearl", 6186, -1314, "Pillager cruiser", "Grankolandia", -1.5);
+    addStructure("Theodes", 5842, -1360, "Better ocean monument", "Grankolandia", -1.5);
+    addStructure("Infero", -2475, 5155, "Underground Chamber", "Valkýria", -1.5);
+    addStructure("Éria", -3839, 3842, "Infested Temple", "Valkýria", -2.5);
+    addStructure("Bled", -643, 5130, "Underground Chamber", "Norddeutschland", -1.5);
+    addStructure("Lether", -972, 4772, "Underground Chamber", "Norddeutschland", -1.5);
+    
+                 
+              
+
+    
+    addWater("Dunaj", "Rieka", 400, 840, "river-label", 90, 20, -1.25);
+    addWater("North Red Sea", "More", 2003, 1120, "sea-label", 300, 40, -2);
+    addWater("Oko Hôr", "Jazero", 307, 4305, "lake-label", 140, 28, -1.25);
+    addWater("Dares", "Rieka", -1524, -5555, "river-label", 90, 20, -1.5);
+    addWater("Severný Atlantik", "More", -2060, -2900, "sea-label", 300, 40, -2);
+    addWater("Stredný Atlantik", "More", -1084, -420, "sea-label", 300, 40, -2);
+    addWater("Južný Atlantik", "More", -316, 1002, "sea-label", 300, 40, -2);
+
+    addLandmarkArea("Podunajská Nížina", "Lúky", 1200, 500, -2, -0.5);
+
+    refreshVisibility();
+  </script>
 </body>
 </html>
