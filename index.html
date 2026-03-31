@@ -736,7 +736,9 @@ function addState(
   fillColor = borderColor,
   fillOpacity = 0.25,
   minZoom = -999,
-  fillMaxZoom = -1.5
+  fillMaxZoom = -1.5,
+  labelX = null,
+  labelZ = null
 ) {
   const polygon = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
     color: borderColor,
@@ -745,6 +747,7 @@ function addState(
     fillOpacity: 0
   });
 
+  // CLICK
   polygon.on("click", function (e) {
     const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
 
@@ -765,6 +768,7 @@ function addState(
       .openPopup();
   });
 
+  // VISIBILITY + FILL
   registerUpdater(() => {
     const zoom = map.getZoom();
     const show = isChecked("toggleStates") && zoom >= minZoom;
@@ -782,8 +786,12 @@ function addState(
     }
   });
 
-  const center = getPolygonCenter(points);
+  // CENTER (manual override alebo auto)
+  const center = (labelX !== null && labelZ !== null)
+    ? { x: labelX, z: labelZ }
+    : getPolygonCenter(points);
 
+  // LABEL
   createTextLabel(
     statesLayer,
     "toggleStates",
@@ -796,6 +804,7 @@ function addState(
     -1.2
   );
 
+  // SEARCH
   addToSearchIndex({
     kind: "state",
     kindLabel: "Štát",
@@ -809,13 +818,14 @@ function addState(
 
   return polygon;
 }
-
 function addRegion(
   name,
   state,
   points,
   borderColor = "#ff6b6b",
-  minZoom = -1.5
+  minZoom = -1.5,
+  labelX = null,
+  labelZ = null
 ) {
   const polygon = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
     color: borderColor,
@@ -823,6 +833,7 @@ function addRegion(
     fillOpacity: 0
   });
 
+  // CLICK
   polygon.on("click", function (e) {
     const mc = pixelToMc(e.latlng.lat, e.latlng.lng);
 
@@ -844,6 +855,7 @@ function addRegion(
       .openPopup();
   });
 
+  // VISIBILITY
   registerUpdater(() => {
     if (isChecked("toggleRegions") && map.getZoom() >= minZoom) {
       if (!regionsLayer.hasLayer(polygon)) regionsLayer.addLayer(polygon);
@@ -852,8 +864,12 @@ function addRegion(
     }
   });
 
-  const center = getPolygonCenter(points);
+  // CENTER (manual alebo auto)
+  const center = (labelX !== null && labelZ !== null)
+    ? { x: labelX, z: labelZ }
+    : getPolygonCenter(points);
 
+  // LABEL
   createTextLabel(
     regionsLayer,
     "toggleRegions",
@@ -866,6 +882,7 @@ function addRegion(
     0
   );
 
+  // SEARCH
   addToSearchIndex({
     kind: "region",
     kindLabel: "Región",
@@ -1019,7 +1036,7 @@ addState("Ľudovo-demokratická Republika Pracovníkov", [
   { x: -5959, z: 1960 },
   { x: -7000, z: 1402 },
   { x: -7000, z: -7000 }
-], "#808080", "#2f9e44", 0.35, -999, -1.5);
+], "#808080", "#2f9e44", 0.35, -999, -1.5, -3085, -1825);
 
 addState("Grankolandia", [
   { x: 6830, z: 32 },
@@ -1052,7 +1069,7 @@ addState("Grankolandia", [
   { x: 2300, z: -7000 },
   { x: 7000, z: -7000 },
   { x: 7000, z: -230 }
-], "#808080", "#d9b300", 0.35, -999, -1.5);
+], "#808080", "#d9b300", 0.35, -999, -1.5, 5920, -2040);
 
 addState("Berlin & Staliningrad", [
   { x: 2300, z: -7000 },
@@ -1089,14 +1106,14 @@ addState("Berlin & Staliningrad", [
   { x: -1389, z: -5707 },
   { x: -1303, z: -6227 },
   { x: -1566, z: -7000 }
-], "#808080", "#33c7c7", 0.35, -999, -1.5);
+], "#808080", "#33c7c7", 0.35, -999, -1.5, 1440, -3081);
 
 addState("Spawn", [
   { x: -67, z: 74 },
   { x: 158, z: 85 },
   { x: 139, z: -57 },
   { x: -28, z: -55 }
-], "#808080", "#808080", 0.35, -999, -1.5);
+], "#808080", "#808080", 0.35, -999, -1.5, 152, 79);
 
 addState("Norddeutschland", [
   { x: -7000, z: 1403 },
@@ -1146,7 +1163,7 @@ addState("Norddeutschland", [
   { x: 7000, z: -231 },
   { x: 7000, z: 7000 },
   { x: -7000, z: 7000 }
-], "#808080", "#00008B", 0.35, -999, -1.5);
+], "#808080", "#00008B", 0.35, -999, -1.5, 4730, 5716);
 
 addState("Valkýria", [
   { x: 1128, z: 176 }, { x: 1522, z: 598 }, { x: 1252, z: 902 }, { x: 1729, z: 759 },
@@ -1162,7 +1179,7 @@ addState("Valkýria", [
   { x: -674, z: 3648 }, { x: -306, z: 3032 }, { x: -150, z: 2786 }, { x: -950, z: 2330 },
   { x: -1128, z: 1828 }, { x: -1008, z: 1450 }, { x: -236, z: 836 }, { x: 328, z: 822 },
   { x: 686, z: 644 }, { x: 516, z: 346 }
-], "#808080", "#c1121f", 0.35, -999,-1.5);
+], "#808080", "#c1121f", 0.35, -999,-1.5, 2181, 2110);
 
     addRegion("Panjam", "Valkýria", [
       { x: -1072, z: 4717 },
