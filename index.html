@@ -1,95 +1,136 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Minecraft mapa</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #111;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+/* ===== LABELY ===== */
+
+.state-label {
+  color: white;
+  font-size: 26px;
+  font-weight: bold;
+  text-shadow: 3px 3px 0 black;
+  pointer-events: none;
+}
+
+.region-label {
+  color: #ffe680;
+  font-size: 18px;
+  font-weight: bold;
+  text-shadow: 2px 2px 0 black;
+  pointer-events: none;
+}
+</style>
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
-const imageWidth = 14000;
-const imageHeight = 14000;
+// ===== NASTAVENIA =====
+const SIZE = 14000;
+const MIN = -7000;
+const MAX = 7000;
 
-const mcMinX = -7000;
-const mcMaxZ = 7000;
-
-const bounds = [[0, 0], [imageHeight, imageWidth]];
-
+// ===== MAPA =====
 const map = L.map("map", {
   crs: L.CRS.Simple,
   minZoom: -4,
   maxZoom: 2
 });
 
+const bounds = [[0,0],[SIZE,SIZE]];
 L.imageOverlay("mapa.jpg", bounds).addTo(map);
 map.fitBounds(bounds);
 
+// ===== LAYERS =====
 const statesLayer = L.layerGroup().addTo(map);
 const regionsLayer = L.layerGroup().addTo(map);
 
-// ===== PREPOČTY =====
-function mcToPixel(x, z) {
-  return [mcMaxZ - z, x - mcMinX];
+// ===== PREVOD =====
+function mcToPixel(x,z){
+  return [MAX - z, x - MIN];
 }
 
 // ===== STRED POLYGÓNU =====
-function getCenter(points) {
-  let x = 0, z = 0;
-  points.forEach(p => {
-    x += p.x;
-    z += p.z;
+function getCenter(points){
+  let x=0,z=0;
+  points.forEach(p=>{
+    x+=p.x;
+    z+=p.z;
   });
-  return {
-    x: x / points.length,
-    z: z / points.length
-  };
+  return {x:x/points.length, z:z/points.length};
 }
 
 // ===== LABEL =====
-function addLabel(layer, text, x, z, className, minZoom, maxZoom) {
-  const label = L.marker(mcToPixel(x, z), {
+function createLabel(layer, text, x, z, className){
+  const label = L.marker(mcToPixel(x,z),{
     icon: L.divIcon({
-      className: "",
-      html: `<div class="${className}">${text}</div>`
+      className:"",
+      html:`<div class="${className}">${text}</div>`
     }),
-    interactive: false
+    interactive:false
   });
-
-  map.on("zoomend", () => {
-    const zLevel = map.getZoom();
-    if (zLevel >= minZoom && zLevel <= maxZoom) {
-      if (!layer.hasLayer(label)) layer.addLayer(label);
-    } else {
-      if (layer.hasLayer(label)) layer.removeLayer(label);
-    }
-  });
-
   layer.addLayer(label);
 }
 
 // ===== STATE =====
-function addState(name, points, color) {
+function addState(name, points, color){
 
-  const poly = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
-    color: color,
-    weight: 4,
-    fillOpacity: 0.2
-  }).addTo(statesLayer);
+  const polygon = L.polygon(
+    points.map(p=>mcToPixel(p.x,p.z)),
+    {
+      color:"#808080",
+      weight:4,
+      fillColor:color,
+      fillOpacity:0.25
+    }
+  ).addTo(statesLayer);
 
   const center = getCenter(points);
 
-  addLabel(statesLayer, name, center.x, center.z, "state-label", -4, -1);
-
+  createLabel(statesLayer, name, center.x, center.z, "state-label");
 }
 
 // ===== REGION =====
-function addRegion(name, points) {
+function addRegion(name, points){
 
-  const poly = L.polygon(points.map(p => mcToPixel(p.x, p.z)), {
-    color: "#ff6b6b",
-    weight: 2
-  }).addTo(regionsLayer);
+  const polygon = L.polygon(
+    points.map(p=>mcToPixel(p.x,p.z)),
+    {
+      color:"#ff6b6b",
+      weight:2,
+      fillOpacity:0
+    }
+  ).addTo(regionsLayer);
 
   const center = getCenter(points);
 
-  addLabel(regionsLayer, name, center.x, center.z, "region-label", -2, 2);
-
+  createLabel(regionsLayer, name, center.x, center.z, "region-label");
 }
 
-// ===== TEST DATA =====
+// ===== DATA =====
 
+// ŠTÁTY
 addState("Valkýria", [
   { x: 1128, z: 176 },
   { x: 2401, z: 1105 },
@@ -109,6 +150,15 @@ addState("Grankolandia", [
   { x: 7000, z: -230 }
 ], "#d9b300");
 
+addState("Berlin & Staliningrad", [
+  { x: 2300, z: -7000 },
+  { x: 2299, z: -2768 },
+  { x: 1533, z: -63 },
+  { x: -1047, z: -574 },
+  { x: -1566, z: -7000 }
+], "#33c7c7");
+
+// REGIÓNY
 addRegion("Panjam", [
   { x: -1072, z: 4717 },
   { x: -1292, z: 4561 },
@@ -125,3 +175,6 @@ addRegion("Nóra Valley", [
 ]);
 
 </script>
+
+</body>
+</html>
